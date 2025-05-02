@@ -218,7 +218,7 @@ export default function Index() {
                   three month project can now take 3 weeks through AB 360”
                 </p>
                 <div className="mx-auto">
-                  <button className="w-full text-white rounded-sm py-2 bg-gradient-to-r from-gradient-gold to-gradient-blue">
+                  <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue">
                     Get Started
                   </button>
                 </div>
@@ -235,7 +235,7 @@ export default function Index() {
                   three month project can now take 3 weeks through AB 360”
                 </p>
                 <div className="mx-auto">
-                  <button className="w-full text-white rounded-sm py-2 bg-gradient-to-r from-gradient-gold to-gradient-blue">
+                  <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue">
                     Get Started
                   </button>
                 </div>
@@ -252,7 +252,7 @@ export default function Index() {
                   three month project can now take 3 weeks through AB 360”
                 </p>
                 <div className="mx-auto">
-                  <button className="w-full text-white rounded-sm py-2 bg-gradient-to-r from-gradient-gold to-gradient-blue">
+                  <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue">
                     Get Started
                   </button>
                 </div>
