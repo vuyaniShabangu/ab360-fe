@@ -37,7 +37,7 @@ export function SignupForm({
                              ...props
                            }: React.ComponentProps<'form'>) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, ] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,7 +58,7 @@ export function SignupForm({
 
     if (response.error) {
       toast.error(response.error.message, {
-        description: response.error.internal_message,
+        description: response.error.message,
       });
     } else if (response.data) {
       toast.success('Account created successfully', {

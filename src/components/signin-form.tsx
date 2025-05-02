@@ -54,7 +54,7 @@ export function SigninForm({
 
     if (response.error) {
       toast.error(response.error.message, {
-        description: response.error.internal_message,
+        description: response.error.message,
       });
     } else if (response.data) {
       toast.success('Logged in successfully');
