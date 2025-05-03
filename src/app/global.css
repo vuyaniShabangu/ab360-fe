@@ -4,6 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --light-gray: #848199;
+  --purple-dark-bg: #231D4F;
+  --gold-dark: #B9946F;
+  --gold-light: #F6EBDF;
   --gold-color: #EBC59D;
   --color-gold: #E4BB90;
   --dark-purple: #3F3F58;
@@ -91,9 +95,13 @@
   --color-gradient-gold: var(--gradient-gold);
   --color-gradient-blue: var(--gradient-blue);
   --color-dark-bg: var(--dark-bg);
+  --color-light-gray: var(--light-gray);
+  --color-dark-purple-bg: var(--purple-dark-bg);
   --color-gold-dark-color: var(--color-gold);
+  --color-dark-gold-bg: var(--gold-dark);
   --color-light-bg: var(--light-bg);
   --color-hero-text-black: var(--hero-text-black);
+  --color-gold-light: var(--gold-light);
   --color-gold-color: var(--gold-color);
   --color-dark-purple: var(--dark-purple);
   --color-light-purple: var(--light-purple);
