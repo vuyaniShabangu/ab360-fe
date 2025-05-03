@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Footer from './custom-components/footer';
+import Link from 'next/link';
 
 export default function Index() {
   return (
@@ -20,12 +21,16 @@ export default function Index() {
             </h1>
             <p className="pb-12 text-hero-text-black font-light text-2xl">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution`}</p>
             <div className="flex gap-5 items-center">
-              <button className="font-lexend bg-dark-purple text-white rounded-sm py-2 px-6 cursor-pointer">
-                Get Started
-              </button>
-              <button className="font-lexend bg-white border-2 border-dark-purple text-dark-purple rounded-sm py-2 px-6 cursor-pointer">
-                Login
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="font-lexend bg-dark-purple text-white rounded-sm py-2 px-6 cursor-pointer">
+                  Get Started
+                </button>
+              </Link>
+              <Link href={'/sign-in'}>
+                <button className="font-lexend bg-white border-2 border-dark-purple text-dark-purple rounded-sm py-2 px-6 cursor-pointer">
+                  Login
+                </button>
+              </Link>
             </div>
           </div>
           <div className="flex gap-5 items-center">
@@ -107,9 +112,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
-              <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
-                Get Started
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
           <div className=" bg-light-bg text-dark-bg py-10 px-4">
@@ -118,9 +125,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
+            <Link href={'/sign-up'}>
               <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
                 Get Started
               </button>
+            </Link>
             </div>
           </div>
         </div>
@@ -131,9 +140,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
-              <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
-                Get Started
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
           <div className=" bg-dark-bg text-light-bg py-10 px-4">
@@ -142,9 +153,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
-              <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
-                Get Started
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -156,9 +169,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
-              <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
-                Get Started
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
           <div className=" bg-light-bg text-dark-bg py-10 px-4">
@@ -167,9 +182,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
-              <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
-                Get Started
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -180,9 +197,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
-              <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
-                Get Started
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
           <div className=" bg-dark-bg text-light-bg py-10 px-4">
@@ -191,9 +210,11 @@ export default function Index() {
             </h1>
             <p className="max-w-sm mx-auto text-center font-light font-lexend pb-8 text-lg">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution.`}</p>
             <div className="flex justify-center">
-              <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
-                Get Started
-              </button>
+              <Link href={'/sign-up'}>
+                <button className="bg-dark-purple text-light-bg py-2 px-6 cursor-pointer rounded-sm">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -218,9 +239,11 @@ export default function Index() {
                   three month project can now take 3 weeks through AB 360”
                 </p>
                 <div className="mx-auto">
-                  <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue">
-                    Get Started
-                  </button>
+                  <Link href={'/sign-up'}>
+                    <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue cursor-pointer">
+                      Get Started
+                    </button>
+                  </Link>
                 </div>
               </div>
               <div className="bg-dark-bg py-7 px-5 rounded-2xl">
@@ -235,9 +258,11 @@ export default function Index() {
                   three month project can now take 3 weeks through AB 360”
                 </p>
                 <div className="mx-auto">
-                  <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue">
-                    Get Started
-                  </button>
+                  <Link href={'/sign-up'}>
+                    <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue cursor-pointer">
+                      Get Started
+                    </button>
+                  </Link>
                 </div>
               </div>
               <div className="bg-dark-bg py-7 px-5 rounded-2xl">
@@ -252,9 +277,11 @@ export default function Index() {
                   three month project can now take 3 weeks through AB 360”
                 </p>
                 <div className="mx-auto">
-                  <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue">
-                    Get Started
-                  </button>
+                  <Link href={'/sign-up'}>
+                    <button className="w-full text-white rounded-sm py-2 bg-linear-to-r from-gradient-gold to-gradient-blue cursor-pointer">
+                      Get Started
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
