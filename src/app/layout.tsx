@@ -19,8 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className='bg-light-gray'>
-      <body className={`antialised ${lexend.variable}`}>{children}</body>
+      <body className={`antialised ${lexend.variable}`}>{children}
       <SonnerProvider />
+      </body>
     </html>
   );
 }
