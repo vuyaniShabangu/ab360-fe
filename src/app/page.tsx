@@ -1,11 +1,32 @@
+"use client"
+
 import Image from 'next/image';
 import Footer from './custom-components/footer';
 import Link from 'next/link';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
+import { Separator } from '@/components/ui/separator';
+
+enum tabsValues {
+  monthly,
+  yearly
+}
 
 export default function Index() {
+  const [tabsValue, setTabsValue] = useState<tabsValues>(tabsValues.monthly)
+
+  const tabsValueChange = (w:string) => {
+    console.log(w)
+    if(w == "monthly"){
+      setTabsValue(tabsValues.monthly)
+    }else {
+      setTabsValue(tabsValues.yearly)
+    }
+  }
+
   return (
     <div className="">
-      <div className="grid min-h-screen lg:grid-cols-2">
+      <div className="grid min-h-screen lg:grid-cols-2 bg-gold-light">
         <div className="flex flex-col py-5 px-10 justify-between">
           <Image
             src="/header-logo.svg"
@@ -70,7 +91,7 @@ export default function Index() {
             </div>
           </div>
 
-          <div className="mt-14 grid grid-cols-3 gap-4">
+          <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="flex flex-col items-center">
               <Image src="/icon1.svg" alt="" width={42} height={42} />
               <h1 className="font-lexend text-xl font-medium py-2 text-center">
@@ -105,7 +126,7 @@ export default function Index() {
       </div>
 
       <div className="">
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className=" bg-dark-bg text-light-bg py-10 px-4">
             <h1 className="text-center font-lexend text-2xl font-semibold pb-8">
               Brand Management
@@ -133,7 +154,7 @@ export default function Index() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className=" bg-light-bg text-dark-bg py-10 px-4">
             <h1 className="text-center font-lexend text-2xl font-semibold pb-8">
               Media Planning
@@ -162,7 +183,7 @@ export default function Index() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className=" bg-dark-bg text-light-bg py-10 px-4">
             <h1 className="text-center font-lexend text-2xl font-semibold pb-8">
               Digital Marketing
@@ -190,7 +211,7 @@ export default function Index() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className=" bg-light-bg text-dark-bg py-10 px-4">
             <h1 className="text-center font-lexend text-2xl font-semibold pb-8">
               Experiential Marketing
@@ -287,7 +308,86 @@ export default function Index() {
             </div>
           </div>
         </div>
-        <Footer />
+        
+      <div className="bg-light-bg">
+        <div className="max-w-6xl mx-auto px-4 py-11 md:py-24">
+          <Tabs defaultValue="monthly" onValueChange={(w:string) => tabsValueChange(w)}>
+            <div className="flex flex-col items-center md:flex-row justify-between">
+              <div className="">
+                <h1 className='font-lexend text-4xl font-semibold text-dark-purple pb-4'>Simple, transparent</h1>
+                <p style={{color:"#848199"}} className='font-lexend text-lg text-center md:text-start'>No contracts. No surprise fees.</p>
+              </div>
+              <TabsList className='rounded-2xl gap-2 mt-5 md:mt-0'>
+                <TabsTrigger  className={tabsValue == tabsValues.monthly ? "rounded-2xl px-6 py-4 text-gold-dark-color": "rounded-2xl px-6 py-4"} value="monthly">Monthly</TabsTrigger>
+                <TabsTrigger disabled className='rounded-2xl px-6 py-4' value="yearly">Yearly</TabsTrigger>
+              </TabsList>
+            </div>
+            <TabsContent value='monthly' className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-16'>
+              <div className="relative w-[370px] mt-6 mx-auto">
+                <div className="w-[340px] h-[427px] bg-white absolute right-10 bottom-16  py-6 px-7 drop-shadow-[6px_3px_10px_#B9946F] transition duration-150 ease-in-out hover:drop-shadow-[10px_-2px_10px_#B9946F]">
+                  <h1 className='relative font-lexend mb-5'>
+                    <span className='font-bold text-3xl' style={{color: "#231D4F"}}>R140,000</span>
+                    <span className='relative top-3 font-lexend text-sm' style={{color: "#848199"}}>/month</span>
+                  </h1>
+                  <h1 style={{color: "#231D4F"}} className='font-lexend font-medium text-2xl mb-5'>Essential</h1>
+                  <Separator />
+                  <ul className='mt-6'>
+                    <li className='font-lexend font-light text-sm mb-4 text-light-gray'>1-3 Modules</li>
+                    <li className='font-lexend font-light text-sm mb-4 text-light-gray'>Own analytics platform</li>
+                    <li className='font-lexend font-light text-sm mb-4 text-light-gray'>Chat support</li>
+                    <li className='font-lexend font-light text-sm mb-4 text-light-gray'>Optimize hashtags</li>
+                    <li className='font-lexend font-light text-sm text-light-gray'>Unlimited users</li>
+                  </ul>
+                </div>
+                <div  className="w-[340px] h-[468px] bg-dark-gold-bg  flex flex-col justify-end ">
+                  <h1 className='pb-4 pl-4 text-white text-sm font-lexend'>CHOOSE PLAN</h1>
+                </div>
+              </div>
+              <div className="relative w-[370px] mt-6 mx-auto">
+                <div className="w-[340px] h-[427px] bg-white absolute right-10 bottom-16 shadow-xl py-6 px-7 drop-shadow-[6px_3px_10px_white] transition duration-150 ease-in-out hover:drop-shadow-[10px_-2px_10px_white]">
+                  <h1 className='relative font-lexend mb-5'>
+                    <span className='font-bold text-3xl' style={{color: "#231D4F"}}>R170,500</span>
+                    <span className='relative top-3 font-lexend text-sm' style={{color: "#848199"}}>/month</span>
+                  </h1>
+                  <h1 style={{color: "#231D4F"}} className='font-lexend font-medium text-2xl mb-5'>Professional</h1>
+                  <Separator />
+                  <ul className='mt-6'>
+                    <li className='font-lexend font-light text-sm mb-4 text-light-gray'>1-3 Modules</li>
+                    <li className='font-lexend font-light text-sm mb-4 text-light-gray'>Own analytics platform</li>
+                    <li  className='font-lexend font-light text-sm mb-4 text-light-gray'>Chat support</li>
+                    <li  className='font-lexend font-light text-sm mb-4 text-light-gray'>Optimize hashtags</li>
+                    <li  className='font-lexend font-light text-sm text-light-gray'>Unlimited users</li>
+                  </ul>
+                </div>
+                <div className="w-[340px] h-[468px] bg-dark-purple-bg flex flex-col justify-end">
+                  <h1 className='pb-4 pl-4 text-white text-sm font-lexend'>CHOOSE PLAN</h1>
+                </div>
+              </div>
+              <div className="relative w-[370px] mt-6 mx-auto">
+                <div className="w-[340px] h-[427px] bg-white absolute right-10 bottom-16 shadow-xl py-6 px-7 drop-shadow-[9px_9px_7px_#B9946F] transition duration-150 ease-in-out hover:drop-shadow-[10px_-2px_10px_#B9946F]">
+                  <h1 className='relative font-lexend mb-5'>
+                    <span className='font-bold text-3xl' style={{color: "#231D4F"}}>R200,000</span>
+                    <span className='relative top-3 font-lexend text-sm' style={{color: "#848199"}}>/month</span>
+                  </h1>
+                  <h1 style={{color: "#231D4F"}} className='font-lexend font-medium text-2xl mb-5'>Premium</h1>
+                  <Separator />
+                  <ul className='mt-6'>
+                    <li  className='font-lexend font-light text-sm mb-4 text-light-gray'>1-3 Modules</li>
+                    <li  className='font-lexend font-light text-sm mb-4 text-light-gray'>Own analytics platform</li>
+                    <li className='font-lexend font-light text-sm mb-4 text-light-gray'>Chat support</li>
+                    <li  className='font-lexend font-light text-sm mb-4 text-light-gray'>Optimize hashtags</li>
+                    <li  className='font-lexend font-light text-sm text-light-gray'>Unlimited users</li>
+                  </ul>
+                </div>
+                <div  className="w-[340px] h-[468px] bg-dark-gold-bg  flex flex-col justify-end">
+                  <h1 className='pb-4 pl-4 text-white text-sm font-lexend'>CHOOSE PLAN</h1>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+      <Footer />
       </div>
     </div>
   );
