@@ -12,7 +12,7 @@ enum tabsValues {
 }
 
 interface Ref {
-  current: any
+  current: unknown;
 }
 
 export default function Index() {
@@ -52,11 +52,11 @@ export default function Index() {
               className=""
             />
             <div className="flex flex-col ">
-              <h1 className="text-4xl font-semibold font-lexend pb-5">
+              <h1 className="text-4xl text-text-black font-semibold font-lexend pb-5">
                 Marketing <span className="text-light-purple">streamlined</span>.
                 Clients <span className="text-gold-color">satisfied</span>.
               </h1>
-              <p className="pb-12 text-hero-text-black font-light text-2xl">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution`}</p>
+              <p className="pb-12 text-text-black font-light text-2xl">{`Your agency's complete marketing ecosystem. Seamlessly connect strategy, creativity, and execution`}</p>
               <div className="flex gap-5 items-center">
                 <Link href={'/sign-up'}>
                   <button className="font-lexend bg-dark-purple text-white rounded-sm py-2 px-6 cursor-pointer">
@@ -91,7 +91,7 @@ export default function Index() {
       <section id='about' ref={aboutUsRef}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="py-32">
-            <h1 className="text-center font-lexend font-semibold text-hero-text-black text-3xl pb-8">
+            <h1 className="text-center font-lexend font-semibold text-text-black text-3xl pb-8">
               Revolutionising Marketing, Advertising & Media Management
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 items-center ">
@@ -266,7 +266,7 @@ export default function Index() {
         <div className="bg-light-bg">
           <div className="max-w-6xl mx-auto px-4">
             <div className="py-32">
-              <h1 className="text-center font-lexend font-semibold text-hero-text-black text-3xl pb-8">
+              <h1 className="text-center font-lexend font-semibold text-text-black text-3xl pb-8">
                 What people say
               </h1>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

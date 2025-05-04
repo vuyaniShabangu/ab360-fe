@@ -82,7 +82,7 @@ export function SignupForm({
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to create to your account
+            Enter your details below to create your account.
           </p>
         </div>
         <div className="grid gap-6">
@@ -91,9 +91,9 @@ export function SignupForm({
             name="name"
             render={({ field }) => (
               <FormItem className="grid gap-3">
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Full name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter you name here" {...field} />
+                  <Input placeholder="Enter your name here" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,7 +106,7 @@ export function SignupForm({
               <FormItem className="grid gap-3">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter you email here" {...field} />
+                  <Input placeholder="Enter your email here" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -121,7 +121,7 @@ export function SignupForm({
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Enter you password here"
+                    placeholder="Enter your password here"
                     {...field}
                   />
                 </FormControl>
@@ -129,8 +129,21 @@ export function SignupForm({
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="grid gap-3">
+                <FormLabel>Job title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your job title here" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button type="submit" className="w-full">
-            Create an account
+            Create account
           </Button>
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
             <span className="bg-background text-muted-foreground relative z-10 px-2">
