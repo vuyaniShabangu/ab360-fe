@@ -16,7 +16,7 @@
   --gradient-blue: #585887;
   --dark-bg: #1E1E1E;
   --light-bg: #F0E8E5;
-  --hero-text-black: #333333;
+  --text-black: #333333;
   --font-lexend: var(--font-lexend);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -100,7 +100,7 @@
   --color-gold-dark-color: var(--color-gold);
   --color-dark-gold-bg: var(--gold-dark);
   --color-light-bg: var(--light-bg);
-  --color-hero-text-black: var(--hero-text-black);
+  --color-text-black: var(--text-black);
   --color-gold-light: var(--gold-light);
   --color-gold-color: var(--gold-color);
   --color-dark-purple: var(--dark-purple);
