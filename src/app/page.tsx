@@ -1,5 +1,6 @@
 "use client"
 
+import { RefObject } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,20 +12,18 @@ enum tabsValues {
   yearly
 }
 
-interface Ref {
-  current: unknown;
-}
+
 
 export default function Index() {
   const [tabsValue, setTabsValue] = useState<tabsValues>(tabsValues.monthly)
 
-  const showcasingRef = useRef(null)
-  const aboutUsRef = useRef(null)
-  const ourServicesRef = useRef(null)
-  const testimonialsRef = useRef(null)
-  const pricingRef = useRef(null)
+  const showcasingRef = useRef<HTMLElement>(null)
+  const aboutUsRef = useRef<HTMLElement>(null)
+  const ourServicesRef = useRef<HTMLElement>(null)
+  const testimonialsRef = useRef<HTMLElement>(null)
+  const pricingRef = useRef<HTMLElement>(null)
 
-  const scrollToPageSection = (refElement: Ref) => {
+  const scrollToPageSection = (refElement: RefObject<HTMLElement | null>) => {
     if(refElement.current != null){
       refElement.current.scrollIntoView({'behavior': 'smooth'})
     }
@@ -278,8 +277,8 @@ export default function Index() {
                     Managing Director - Biza iAfrica Consultants
                   </p>
                   <p className="text-gold-dark-color font-lexend font-light text-lg pb-3">
-                    “This platform has transformed how we serve our clients. A
-                    three month project can now take 3 weeks through AB 360”
+                  &quot;This platform has transformed how we serve our clients. A
+                    three month project can now take 3 weeks through AB 360&quot;
                   </p>
                   <div className="mx-auto">
                     <Link href={'/sign-up'}>
@@ -297,8 +296,8 @@ export default function Index() {
                     Managing Director - Birguid
                   </p>
                   <p className="text-gold-dark-color font-lexend font-light text-lg pb-3">
-                    “This platform has transformed how we serve our clients. A
-                    three month project can now take 3 weeks through AB 360”
+                  &quot;This platform has transformed how we serve our clients. A
+                    three month project can now take 3 weeks through AB 360&quot;
                   </p>
                   <div className="mx-auto">
                     <Link href={'/sign-up'}>
@@ -316,8 +315,8 @@ export default function Index() {
                     Operations Specialist
                   </p>
                   <p className="text-gold-dark-color font-lexend font-light text-lg pb-3">
-                    “This platform has transformed how we serve our clients. A
-                    three month project can now take 3 weeks through AB 360”
+                  &quot;This platform has transformed how we serve our clients. A
+                    three month project can now take 3 weeks through AB 360&quot;
                   </p>
                   <div className="mx-auto">
                     <Link href={'/sign-up'}>
