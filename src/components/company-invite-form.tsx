@@ -16,17 +16,20 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
+import { useState } from 'react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 const formSchema = z.object({
-  email: z.string().optional(),
+  email: z.string().email('Please enter a valid email address'),
 });
 
 export function CompanyInviteForm({
-                             className,
-                             ...props
-                           }: React.ComponentProps<'form'>) {
+  className,
+  ...props
+}: React.ComponentProps<'form'>) {
   const router = useRouter();
-  //const [loading, ] = useState(false);
+  const [invites, setInvites] = useState<string[]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,26 +38,16 @@ export function CompanyInviteForm({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    //TODO: Make API call
-
-    // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-    const response: any = {};
-    console.log(values)
-
-    console.log({ response });
-
-    if (response.error) {
-      toast.error(response.error.message, {
-        description: response.error.message,
-      });
-    } else if (response.data) {
-      toast.success('Account created successfully', {
-        description: 'Please check your email to verify your account',
-      });
-      router.push('/');
+    if (values.email) {
+      setInvites([...invites, values.email]);
+      form.reset({ email: '' });
+      toast.success('Invite sent successfully');
     }
   };
 
+  const handleFinish = () => {
+    router.push('/dashboard');
+  };
 
   return (
     <Form {...form}>
@@ -70,27 +63,42 @@ export function CompanyInviteForm({
           </p>
         </div>
         <div className="grid gap-6">
-            <div className="flex items-end gap-1 w-full">
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                    <FormItem className="grid gap-3 w-full">
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                        <Input placeholder="Enter your email here" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
-                <Button type="submit" className="">
-                Finish
+          <div className="flex items-end gap-1 w-full">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="grid gap-3 w-full">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter email here" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="bg-dark-purple">
+              Invite
             </Button>
+          </div>
+
+          {invites.length > 0 && (
+            <div className="space-y-2">
+              {invites.map((email, index) => (
+                <div key={index} className="flex items-center gap-3 p-2 border rounded-lg">
+                  <Avatar>
+                    <AvatarFallback>{email.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <span className="flex-1">{email}</span>
+                  <Badge variant="secondary">Invite sent</Badge>
+                </div>
+              ))}
             </div>
-            <Button type="submit" className="w-full">
-                Finish
-            </Button>
+          )}
+
+          <Button type="button" onClick={handleFinish} className="w-full">
+            Finish
+          </Button>
         </div>
       </form>
     </Form>
