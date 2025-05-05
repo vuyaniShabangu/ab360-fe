@@ -40,9 +40,7 @@ const formSchema = z.object({
   websiteUrl: z.string().min(8, {
     message: 'Must be at least 2 characters.',
   }),
-  companySize: z.string().min(8, {
-    message: 'Please select one',
-  }),
+  companySize: z.string()
 });
 
 export function CompanySignupForm({
@@ -79,8 +77,8 @@ export function CompanySignupForm({
       toast.success('Account created successfully', {
         description: 'Please check your email to verify your account',
       });
-      router.push('/');
     }
+    router.push('/company-invite');
   };
 
 

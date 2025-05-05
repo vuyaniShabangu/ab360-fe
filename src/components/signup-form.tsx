@@ -30,6 +30,7 @@ const formSchema = z.object({
   password: z.string().min(8, {
     message: 'Password must be at least 8 characters.',
   }),
+  role: z.string().optional()
 });
 
 export function SignupForm({
@@ -44,6 +45,7 @@ export function SignupForm({
       name: '',
       email: '',
       password: '',
+      role: '',
     },
   });
 
@@ -52,6 +54,7 @@ export function SignupForm({
       name: values.name,
       email: values.email,
       password: values.password,
+      //role: values.role
     });
 
     console.log({ response });
@@ -64,8 +67,9 @@ export function SignupForm({
       toast.success('Account created successfully', {
         description: 'Please check your email to verify your account',
       });
-      router.push('/');
+      //router.push('/');
     }
+    router.push('/company-signup');
   };
 
   const signUpWithSocial = async () => {
@@ -131,7 +135,7 @@ export function SignupForm({
           />
           <FormField
             control={form.control}
-            name="name"
+            name="role"
             render={({ field }) => (
               <FormItem className="grid gap-3">
                 <FormLabel>Job title</FormLabel>
