@@ -56,7 +56,7 @@ export function DashboardSidebar({
             </SidebarMenuItem >
             <SidebarMenuItem>
               <SidebarMenuButton asChild className={activeMenuItem === MenuItem.BrandManagement ? "bg-purple-light-bg text-slate-700" : ""}>
-                <Link href="#">
+                <Link href="/branding">
                   <Briefcase className="h-5 w-5" />
                   <span>Brand Management</span>
                 </Link>
