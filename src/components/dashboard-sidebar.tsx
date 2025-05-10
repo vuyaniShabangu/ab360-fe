@@ -23,30 +23,39 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { MenuItem } from "@/types/menu-items.enum";
 
-export function DashboardSidebar() {
+type DashboardSidebarProps = {
+    activeMenuItem: MenuItem
+    organisationName: string
+}
+
+export function DashboardSidebar({
+    activeMenuItem,
+    organisationName
+}:DashboardSidebarProps) {
   return (
     <SidebarProvider defaultOpen={true}>
       <Sidebar className="border-r font-lexend font-light text-text-black">
-        <SidebarHeader className="flex flex-row items-center gap-2 px-5 py-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200">
-            <span className="text-sm">🐻</span>
+        <SidebarHeader className="flex flex-row items-center gap-2 px-5 py-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold-light">
+            <span className="text-md font-semibold">{organisationName.charAt(0).toUpperCase()}</span>
           </div>
-          <span className="text-lg font-medium text-text-black">Bear Fruit</span>
+          <span className="text-md font-medium text-text-black">{organisationName}</span>
         </SidebarHeader>
         <SidebarContent className="px-5 text-text-black text-xs">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild className="bg-purple-light-bg text-slate-700">
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.Home ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="/dashboard">
                   <Home className="h-5 w-5" />
                   <span>Home</span>
                 </Link>
               </SidebarMenuButton>
-            </SidebarMenuItem>
+            </SidebarMenuItem >
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.BrandManagement ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="#">
                   <Briefcase className="h-5 w-5" />
                   <span>Brand Management</span>
@@ -54,7 +63,7 @@ export function DashboardSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.DigitalMarketing ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="#">
                   <BarChart2 className="h-5 w-5" />
                   <span>Digital Marketing</span>
@@ -62,7 +71,7 @@ export function DashboardSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.MarketingResearch ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="#">
                   <Search className="h-5 w-5" />
                   <span>Marketing Research</span>
@@ -70,7 +79,7 @@ export function DashboardSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.MediaPlanning ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="#">
                   <Calendar className="h-5 w-5" />
                   <span>Media Planning</span>
@@ -78,7 +87,7 @@ export function DashboardSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.MarketingStrategy ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="#">
                   <LineChart className="h-5 w-5" />
                   <span>Marketing Strategy</span>
@@ -86,7 +95,7 @@ export function DashboardSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.ProposalAndPitchDevelopment ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="#">
                   <FileText className="h-5 w-5" />
                   <span>Proposal & Pitch Development</span>
@@ -94,7 +103,7 @@ export function DashboardSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild className={activeMenuItem === MenuItem.ExperientialMarketing ? "bg-purple-light-bg text-slate-700" : ""}>
                 <Link href="#">
                   <Lightbulb className="h-5 w-5" />
                   <span>Experiential Marketing</span>
