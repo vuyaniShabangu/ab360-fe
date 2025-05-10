@@ -1,26 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
+import { MenuItem } from "@/types/menu-items.enum"
+import { Header } from "@/components/header"
 
 export default function DashboardPage() {
   return (
     <div className="flex bg-background font-lexend">
-      <DashboardSidebar />
+      <DashboardSidebar activeMenuItem={MenuItem.Home} organisationName="Experience Adverts"/>
       <div className="flex flex-col w-full">
-        <header className="sticky top-0 z-10 flex h-16 w-full items-center justify-end border-b bg-background px-6 shadow-sm">
-          <nav className="flex items-center gap-6">
-            <Button variant="link" className="text-foreground">
-              Client
-            </Button>
-            <Button variant="link" className="text-foreground">
-              Project
-            </Button>
-            <Avatar className="h-9 w-9">
-              <AvatarImage src="/placeholder.svg?height=36&width=36" alt="User" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          </nav>
-        </header>
+        <Header />
         <main className="p-6">
           <h1 className="text-3xl font-normal">Dashboard</h1>
 
@@ -132,3 +120,5 @@ const clients = [
     projects: ["Project Iota", "Project Kappa"],
   },
 ]
+
+
