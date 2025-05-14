@@ -61,8 +61,8 @@ export function SigninForm({
       });
     } else if (response.data) {
       toast.success('Logged in successfully');
-      document.cookie = `name=${response.data.data.user.name}`
-      document.cookie = `id=${response.data.data.user.id}`
+      document.cookie = `name=${response.data.user.name}`
+      document.cookie = `id=${response.data.user.id}`
       
       router.push(PageRoutes.DASHBOARD);
     }
