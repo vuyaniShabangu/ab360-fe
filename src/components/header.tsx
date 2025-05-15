@@ -5,13 +5,14 @@ import { getCookie, hasCookie, setCookie } from "cookies-next";
 import { apiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import { APIRoutes } from "@/constants/api_routes";
+import { Cookies } from "@/constants/cookies";
 
 export function Header() {
     const [userName, setUserName] = useState("")
     
     useEffect(() => {
       if(hasCookie("name")){
-        const cookieValue =  getCookie("name")
+        const cookieValue =  getCookie(Cookies.NAME)
         if(cookieValue){
           setUserName(`${cookieValue}`)
         }
@@ -21,8 +22,8 @@ export function Header() {
         apiRequest(HttpMethods.GET, APIRoutes.ORGANIZATIONS.GET_ORGANIZATION+`/${getACookie().id}`)
           .then(response => {
             console.log(response)
-            setCookie("organizationName", response?.name);
-            setCookie("organizationId", response?.id)
+            setCookie(Cookies.ORGANIZATION_NAME, response?.name);
+            setCookie(Cookies.ORGANIZATION_ID, response?.id)
           })
           .catch(err => {
             console.log(err)
