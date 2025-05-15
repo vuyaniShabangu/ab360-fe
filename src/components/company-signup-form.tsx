@@ -67,10 +67,10 @@ export function CompanySignupForm({
       name: values.companyName,
       slug: stringToSlug(values.companyName),
       metadata: {
-        desciption: values.businessDescription,
+        description: values.businessDescription,
         servicesOffered: values.servicesOffered,
         websiteUrl:  values.websiteUrl,
-        compaySize: values.companySize
+        companySize: values.companySize
       }
       //logo: "https://example.com/logo.png"
     }).catch((error) => {
