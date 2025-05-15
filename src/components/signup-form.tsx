@@ -19,6 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signUp } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { PageRoutes } from '@/constants/page_routes';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -34,11 +35,11 @@ const formSchema = z.object({
 });
 
 export function SignupForm({
-                             className,
-                             ...props
-                           }: React.ComponentProps<'form'>) {
+  className,
+  ...props
+}: React.ComponentProps<'form'>) {
   const router = useRouter();
-  const [loading, ] = useState(false);
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,30 +51,35 @@ export function SignupForm({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const response = await signUp.email({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      //role: values.role
-    });
-
-    console.log({ response });
-
-    if (response.error) {
-      toast.error(response.error.message, {
-        description: response.error.message,
+    try {
+      setLoading(true);
+      const response = await signUp.email({
+        name: values.name,
+        email: values.email,
+        password: values.password,
       });
-    } else if (response.data) {
-      toast.success('Account created successfully', {
-        description: 'Please check your email to verify your account',
-      });
-      //router.push('/');
+
+      if (response.error) {
+        toast.error(response.error.message);
+        return;
+      }
+
+      if (response.data) {
+        toast.success('Account created successfully', {
+          description: 'Please check your email to verify your account',
+        });
+        router.push(PageRoutes.COMPANY_SIGNUP);
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error('An unexpected error occured. Please try again later.');
+    } finally {
+      setLoading(false);
     }
-    router.push('/company-signup');
   };
 
   const signUpWithSocial = async () => {
-    toast.info('Coming soon')
+    toast.info('Coming soon');
   };
 
   return (
@@ -146,7 +152,7 @@ export function SignupForm({
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={loading}>
             Create account
           </Button>
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -164,8 +170,8 @@ export function SignupForm({
               type="button"
               variant="outline"
               className={cn('w-full gap-2')}
-              disabled={loading}
               onClick={signUpWithSocial}
+              disabled={loading}
             >
               <img src="/google.svg" alt="signin with google" />
               Sign up with your Google account

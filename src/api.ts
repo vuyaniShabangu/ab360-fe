@@ -1,5 +1,6 @@
 import { getCookie, deleteCookie } from 'cookies-next';
 import { HttpMethods } from './constants/api_methods';
+import { Cookies } from './constants/cookies';
 
 export async function apiRequest(method: HttpMethods, url: string = '', data = {}) {
   // Default options are marked with *
@@ -33,7 +34,7 @@ export async function authorizedApiRequest(method: HttpMethods, url: string = ''
     cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'same-origin', // include, *same-origin, omit
     headers: {
-      Authorization: `Bearer ${getCookie('jwt_token')}`,
+      Authorization: `Bearer ${getCookie(Cookies.BEARER_TOKEN)}`,
       'Content-Type': 'application/json',
       'Cache-Control': 'public, s-maxage=86400'
     },

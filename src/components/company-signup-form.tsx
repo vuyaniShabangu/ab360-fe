@@ -1,10 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn, stringToSlug } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from "@/components/ui/textarea";
+import { organization } from '@/lib/auth-client';
 import {
     Select,
     SelectContent,
@@ -26,6 +27,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
+import { PageRoutes } from '@/constants/page_routes';
 
 const formSchema = z.object({
   companyName: z.string().min(2, {
@@ -61,24 +63,24 @@ export function CompanySignupForm({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    //TODO: Make API call
-
-    // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-    const response: any = {};
-    console.log(values)
-
-    console.log({ response });
-
-    if (response.error) {
-      toast.error(response.error.message, {
-        description: response.error.message,
-      });
-    } else if (response.data) {
-      toast.success('Account created successfully', {
-        description: 'Please check your email to verify your account',
-      });
-    }
-    router.push('/company-invite');
+    const organisation = await organization.create({
+      name: values.companyName,
+      slug: stringToSlug(values.companyName),
+      metadata: {
+        desciption: values.businessDescription,
+        servicesOffered: values.servicesOffered,
+        websiteUrl:  values.websiteUrl,
+        compaySize: values.companySize
+      }
+      //logo: "https://example.com/logo.png"
+    }).catch((error) => {
+      console.log("error creating organisation:");
+      toast.error("An unexpected error occured. Please try again later");
+      console.log(error);
+    });
+    console.log(organisation)
+    toast.success("Company successfully created");
+    router.push(PageRoutes.COMPANY_INVITE);
   };
 
 
