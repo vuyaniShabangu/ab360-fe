@@ -2,46 +2,36 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { getCookie, hasCookie, setCookie } from "cookies-next";
-import { apiRequest } from "@/api";
-import { HttpMethods } from "@/constants/api_methods";
-import { APIRoutes } from "@/constants/api_routes";
 import { Cookies } from "@/constants/cookies";
+import { authClient } from "@/lib/auth-client";
 
 export function Header() {
     const [userName, setUserName] = useState("")
+      const {data, error, isPending} = authClient.useListOrganizations()
+    
     
     useEffect(() => {
-      if(hasCookie("name")){
+      if(hasCookie(Cookies.NAME)) {
         const cookieValue =  getCookie(Cookies.NAME)
         if(cookieValue){
           setUserName(`${cookieValue}`)
         }
       }
   
-      if(getACookie().found){
-        apiRequest(HttpMethods.GET, APIRoutes.ORGANIZATIONS.GET_ORGANIZATION+`/${getACookie().id}`)
-          .then(response => {
-            console.log(response)
-            setCookie(Cookies.ORGANIZATION_NAME, response?.name);
-            setCookie(Cookies.ORGANIZATION_ID, response?.id)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-  
     }, [])
-  
-    const getACookie = (): {found: boolean, id: string} =>  {
-      const cookies = document.cookie.split('; ');
-      for (const cookie of cookies) {
-        const [cookieName, cookieValue] = cookie.split('=');
-        if (cookieName === "id") {
-          console.log(cookieValue)
-          return {found: true, id: cookieValue};
+
+    if(!isPending) {
+      if(!error && data){
+        if(data[0] != null) {
+          console.log("organzation info, ", data[0])
+          const organizationId: string|null = data[0].id;
+          const organizationName: string|null = data[0].name;
+          if(organizationId != null && organizationName != null) {
+          setCookie(Cookies.ORGANIZATION_ID, organizationId);
+          setCookie(Cookies.ORGANIZATION_NAME, organizationName);
+          }
         }
       }
-      return {found: false, id: ""};
     }
 
     return <header className="sticky top-0 z-10 flex h-16 w-full items-center justify-end border-b bg-background px-6 shadow-sm">

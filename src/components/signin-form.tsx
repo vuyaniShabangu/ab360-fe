@@ -19,8 +19,10 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { signIn } from '@/lib/auth-client';
+import { authClient, signIn } from '@/lib/auth-client';
 import { PageRoutes } from '@/constants/page_routes';
+import { setCookie } from 'cookies-next';
+import { Cookies } from '@/constants/cookies';
 
 
 const formSchema = z.object({
@@ -38,6 +40,8 @@ export function SigninForm({
 }: React.ComponentProps<'form'>) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const {data, error, isPending} = authClient.useListOrganizations()
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,20 +57,36 @@ export function SigninForm({
       password: values.password,
     });
 
-    console.log({ response });
+    console.log("login response, " +{ response });
 
     if (response.error) {
       toast.error(response.error.message, {
         description: response.error.message,
       });
+      console.log(response.error)
+      return
     } else if (response.data) {
       toast.success('Logged in successfully');
-      document.cookie = `name=${response.data.user.name}`
-      document.cookie = `id=${response.data.user.id}`
+      document.cookie = `name=${response.data.user.name}`;
+      document.cookie = `id=${response.data.user.id}`;
+
+      if(!isPending) {
+        if(!error && data){
+          if(data[0] != null) {
+            const organizationId: string|null = data[0].id;
+            const organizationName: string|null = data[0].name;
+            if(organizationId != null && organizationName != null) {
+            setCookie(Cookies.ORGANIZATION_ID, organizationId);
+            setCookie(Cookies.ORGANIZATION_NAME, organizationName);
+            }
+          }
+        }
+      }
+    }
       
       router.push(PageRoutes.DASHBOARD);
     }
-  };
+  
 
   const signInWithSocial = async () => {
     // toast.info('Coming soon');

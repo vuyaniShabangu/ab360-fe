@@ -46,7 +46,7 @@ export default function BrandingPage() {
       
   return (
     <div className="flex bg-background font-lexend">
-      <DashboardSidebar activeMenuItem={MenuItem.BrandManagement} organisationName="Experience Adverts"/>
+      <DashboardSidebar activeMenuItem={MenuItem.BrandManagement} />
       <div className="flex flex-col w-full">
         <Header />
         <main className="p-6">
