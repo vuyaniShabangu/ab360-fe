@@ -15,6 +15,7 @@ import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Cookies } from "@/constants/cookies";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
     clientName: z.string({message: "The name is required"})
@@ -32,6 +33,7 @@ interface Props {
 
 const ClientCreateDialogue = ({open, setOpen}: Props) => {
     const [, setOrganisationId] = useState<string>("");    
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         getfullOrganization()
@@ -62,8 +64,7 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
       })
 
       const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values)
-        setOpen(false)
+        setLoading(true)
         const orgId = getCookie(Cookies.ORGANIZATION_ID);
         const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${orgId}/clients`;
         authorizedApiRequest(HttpMethods.POST, url,
@@ -72,10 +73,14 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
             websiteUrl: values.websiteUrl,
             contactPerson: values.contactPerson})
             .then(response => {
-                console.log("respone ,", response);
+                console.log("client created successfully! ,", response);
+                form.reset({clientName: "", description: "", websiteUrl: "", contactPerson: ""})
+                setOpen(false)
+                setLoading(false);
             })
             .catch(error => {
-                console.log("err ", error)
+                console.log("error creating a client, ", error)
+                setLoading(false)
             })
       }
 
@@ -148,7 +153,14 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                 )}
                                 />
                             <DialogFooter className="mt-5">
+                                {loading ?
+                                    <Button disabled>
+                                        <Loader2 className="animate-spin" />
+                                        Please wait
+                                    </Button> 
+                                :
                                 <Button className="cursor-pointer" type="submit">Save Client</Button>
+                            }
                             </DialogFooter>
                             </form>
                         </Form>

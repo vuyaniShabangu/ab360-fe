@@ -42,6 +42,8 @@ export function SignupForm({
 }: React.ComponentProps<'form'>) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const {data, error, isPending} = authClient.useListOrganizations()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,6 +65,7 @@ export function SignupForm({
 
       if (response.error) {
         toast.error(response.error.message);
+        console.log(response.error);
         return;
       }
 
@@ -70,8 +73,7 @@ export function SignupForm({
         toast.success('Account created successfully', {
           description: 'Please check your email to verify your account',
         });
-
-        const {data, error, isPending} = authClient.useListOrganizations()
+        console.log(response.data);
 
         if(!isPending) {
           if(!error && data){

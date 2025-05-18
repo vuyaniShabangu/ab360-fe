@@ -40,6 +40,8 @@ export function SigninForm({
 }: React.ComponentProps<'form'>) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const {data, error, isPending} = authClient.useListOrganizations()
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,12 +63,12 @@ export function SigninForm({
       toast.error(response.error.message, {
         description: response.error.message,
       });
+      console.log(response.error)
+      return
     } else if (response.data) {
       toast.success('Logged in successfully');
       document.cookie = `name=${response.data.user.name}`;
       document.cookie = `id=${response.data.user.id}`;
-
-      const {data, error, isPending} = authClient.useListOrganizations()
 
       if(!isPending) {
         if(!error && data){

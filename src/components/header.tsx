@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { getCookie, hasCookie } from "cookies-next";
+import { getCookie, hasCookie, setCookie } from "cookies-next";
 import { Cookies } from "@/constants/cookies";
+import { authClient } from "@/lib/auth-client";
 
 export function Header() {
     const [userName, setUserName] = useState("")
+      const {data, error, isPending} = authClient.useListOrganizations()
+    
     
     useEffect(() => {
       if(hasCookie(Cookies.NAME)) {
@@ -16,6 +19,20 @@ export function Header() {
       }
   
     }, [])
+
+    if(!isPending) {
+      if(!error && data){
+        if(data[0] != null) {
+          console.log("organzation info, ", data[0])
+          const organizationId: string|null = data[0].id;
+          const organizationName: string|null = data[0].name;
+          if(organizationId != null && organizationName != null) {
+          setCookie(Cookies.ORGANIZATION_ID, organizationId);
+          setCookie(Cookies.ORGANIZATION_NAME, organizationName);
+          }
+        }
+      }
+    }
 
     return <header className="sticky top-0 z-10 flex h-16 w-full items-center justify-end border-b bg-background px-6 shadow-sm">
       <nav className="flex items-center gap-6">
