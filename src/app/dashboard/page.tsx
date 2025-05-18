@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { MenuItem } from "@/types/menu-items.enum"
 import { Header } from "@/components/header"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import ProjectCreateDialogue from "@/components/project-create"
 import ClientCreateDialogue from "@/components/client-add"
-import { authClient } from "@/lib/auth-client"
 
 export default function DashboardPage() {
   const [createProjectModal, setCreateProjectModal] = useState<boolean>(false)
@@ -24,7 +23,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex bg-background font-lexend">
-      <DashboardSidebar activeMenuItem={MenuItem.Home} organisationName="Experience Adverts"/>
+      <DashboardSidebar activeMenuItem={MenuItem.Home} />
       <div className="flex flex-col w-full">
         <Header />
         <main className="p-6">

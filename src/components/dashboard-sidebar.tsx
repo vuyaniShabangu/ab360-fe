@@ -25,16 +25,30 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { MenuItem } from "@/types/menu-items.enum";
+import { getCookie, hasCookie } from "cookies-next";
+import { Cookies } from "@/constants/cookies";
+import { useEffect, useState } from "react";
 
 type DashboardSidebarProps = {
     activeMenuItem: MenuItem
-    organisationName: string
 }
 
 export function DashboardSidebar({
     activeMenuItem,
-    organisationName
 }:DashboardSidebarProps) {
+
+  const [organisationName, setOrganisationName] = useState("");
+
+  useEffect(() => {
+    if(hasCookie(Cookies.NAME)) {
+      const cookieValue =  getCookie(Cookies.ORGANIZATION_NAME)
+      if(cookieValue){
+        setOrganisationName(`${cookieValue}`)
+      }
+    }
+
+  }, [])
+  
   return (
     <SidebarProvider defaultOpen={true}>
       <Sidebar className="border-r font-lexend font-light text-text-black">
@@ -42,7 +56,7 @@ export function DashboardSidebar({
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold-light">
             <span className="text-md font-semibold">{organisationName.charAt(0).toUpperCase()}</span>
           </div>
-          <span className="text-md font-medium text-text-black">{organisationName}</span>
+          <span className="text-md font-medium text-text-black">{organisationName || ""}</span>
         </SidebarHeader>
         <SidebarContent className="px-5 text-text-black text-xs">
           <SidebarMenu>

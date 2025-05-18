@@ -4,7 +4,8 @@ import { Cookies } from "@/constants/cookies";
 import { setCookie, getCookie } from "cookies-next";
 
 export const authClient = createAuthClient({
-  baseURL: "https://staging-adboss-360-8z72.encr.app",
+  //baseURL: "https://staging-adboss-360-8z72.encr.app",
+  baseURL: "http://localhost:4000",
   basePath: "/api/auth",
   plugins: [ 
     organizationClient()

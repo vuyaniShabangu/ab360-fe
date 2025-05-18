@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Textarea } from "./ui/textarea";
-import { apiRequest, authorizedApiRequest } from "@/api";
+import { authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import { APIRoutes } from "@/constants/api_routes";
 import { getCookie } from "cookies-next";
@@ -25,20 +25,13 @@ const formSchema = z.object({
     contactPerson: z.string({message: "Contact person is required"})
 })
 
-interface IUseListOrganization {
-    id: string,
-    name: string,
-    slug: string,
-    createdAt: Date
-}
-
 interface Props {
     open: boolean,
     setOpen: (value: boolean) => void
 }
 
 const ClientCreateDialogue = ({open, setOpen}: Props) => {
-    const [organisationId, setOrganisationId] = useState<string>("");    
+    const [, setOrganisationId] = useState<string>("");    
 
     useEffect(() => {
         getfullOrganization()

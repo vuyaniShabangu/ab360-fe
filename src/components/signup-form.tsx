@@ -16,10 +16,12 @@ import {
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signUp } from '@/lib/auth-client';
+import { authClient, signUp } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { PageRoutes } from '@/constants/page_routes';
+import { setCookie } from 'cookies-next';
+import { Cookies } from '@/constants/cookies';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -68,6 +70,22 @@ export function SignupForm({
         toast.success('Account created successfully', {
           description: 'Please check your email to verify your account',
         });
+
+        const {data, error, isPending} = authClient.useListOrganizations()
+
+        if(!isPending) {
+          if(!error && data){
+            if(data[0] != null) {
+              const organizationId: string|null = data[0].id;
+              const organizationName: string|null = data[0].name;
+              if(organizationId != null && organizationName != null) {
+              setCookie(Cookies.ORGANIZATION_ID, organizationId);
+              setCookie(Cookies.ORGANIZATION_NAME, organizationName);
+              }
+            }
+          }
+        }
+        
         router.push(PageRoutes.COMPANY_SIGNUP);
       }
     } catch (error) {
