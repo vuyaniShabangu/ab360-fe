@@ -7,10 +7,15 @@ import { Header } from "@/components/header"
 import { useState } from "react"
 import ProjectCreateDialogue from "@/components/project-create"
 import ClientCreateDialogue from "@/components/client-add"
+import useClientStore from "@/stores/use-client-store"
+import useProjectStore from "@/stores/use-project-store"
 
 export default function DashboardPage() {
   const [createProjectModal, setCreateProjectModal] = useState<boolean>(false)
   const [addClientModal, setAddClientModal] = useState<boolean>(false)
+
+  const client = useClientStore((state) => state.currentSelectedClient)
+  const project = useProjectStore((state) => state.currentSelectedProject)
 
   const changeCreateProjectModal = (value: boolean) => {
     setCreateProjectModal(value)
@@ -20,6 +25,20 @@ export default function DashboardPage() {
     setAddClientModal(value)
   }
 
+
+  const isClientSelected = (): boolean => {
+    if(client.id == "" || client.name == ""){
+      return false;
+    }
+    return true
+  }
+
+  const isProjectSelected = (): boolean => {
+    if(project.id == "" || project.name == ""){
+      return false;
+    }
+    return true
+  }
 
   return (
     <div className="flex bg-background font-lexend">
@@ -51,7 +70,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-normal">Campaign Launch</h3>
+                  <h3 className="font-normal">{isProjectSelected() ? project.name : "No project is selected"}</h3>
                   <p className="text-sm text-muted-foreground">Project</p>
                 </div>
               </div>
@@ -74,7 +93,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-normal">GlobalTech Solutions</h3>
+                  <h3 className="font-normal">{isClientSelected() ? client.name: "No client is selected"}</h3>
                   <p className="text-sm text-muted-foreground">Client</p>
                 </div>
               </div>
