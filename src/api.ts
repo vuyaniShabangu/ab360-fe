@@ -4,7 +4,8 @@ import { Cookies } from './constants/cookies';
 
 export async function apiRequest(method: HttpMethods, url: string = '', data = {}) {
   // Default options are marked with *
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+  //const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+    const response = await fetch(`${url}`, {
     method: method, // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
     cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
