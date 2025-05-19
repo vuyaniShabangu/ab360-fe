@@ -23,7 +23,6 @@ import { authClient, signIn } from '@/lib/auth-client';
 import { PageRoutes } from '@/constants/page_routes';
 import { setCookie } from 'cookies-next';
 import { Cookies } from '@/constants/cookies';
-import { cookies } from 'next/headers';
 
 
 const formSchema = z.object({
@@ -41,7 +40,7 @@ export function SigninForm({
 }: React.ComponentProps<'form'>) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const {data, error, isPending} = authClient.useListOrganizations()
+  const {data, isPending} = authClient.useListOrganizations()
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -89,7 +88,7 @@ export function SigninForm({
         }
       }
 
-      if (hasData) {
+      if (hasData && data) {
         setCookie(Cookies.ORGANIZATION_ID, data[0].id);
         setCookie(Cookies.ORGANIZATION_NAME, data[0].name);
         router.push(PageRoutes.DASHBOARD);

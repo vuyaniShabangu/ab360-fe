@@ -101,9 +101,9 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                 name="clientName"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>ClientName</FormLabel>
+                                    <FormLabel>Client Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="ClientName" {...field} />
+                                        <Input placeholder="Client Name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -118,7 +118,7 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                     <FormControl>
                                     <Textarea
                                         {...field}
-                                        placeholder="Description here"
+                                        placeholder="Description"
                                         className=""
                                     />
                                     </FormControl>
