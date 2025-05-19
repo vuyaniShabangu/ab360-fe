@@ -7,8 +7,8 @@ import { Header } from "@/components/header"
 import { useState } from "react"
 import ProjectCreateDialogue from "@/components/project-create"
 import ClientCreateDialogue from "@/components/client-add"
-import useClientStore from "@/stores/clientStore"
-import useProjectStore from "@/stores/projectStore"
+import useClientStore from "@/stores/use-client-store"
+import useProjectStore from "@/stores/use-project-store"
 
 export default function DashboardPage() {
   const [createProjectModal, setCreateProjectModal] = useState<boolean>(false)

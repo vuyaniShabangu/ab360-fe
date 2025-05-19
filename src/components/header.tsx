@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { getCookie, hasCookie, setCookie } from "cookies-next";
+import { getCookie, hasCookie } from "cookies-next";
 import { Cookies } from "@/constants/cookies";
-import { authClient } from "@/lib/auth-client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Folder, UserIcon } from "lucide-react";
 import { APIRoutes } from "@/constants/api_routes";
 import { apiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
-import useClientStore from "@/stores/clientStore";
-import useProjectStore from "@/stores/projectStore";
+import useClientStore from "@/stores/use-client-store";
+import useProjectStore from "@/stores/use-project-store";
 
 
 interface project {
