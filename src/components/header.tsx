@@ -1,3 +1,4 @@
+"use client"
 
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -18,13 +19,10 @@ export function Header() {
     const [clients, setClients] = useState([])
     const [projects, setProjects] = useState([])
 
-    const currentSelectedClient = useClientStore((state) => state.currentSelectedClient);
     const selectCurrentClient = useClientStore((state) => state.selectCurrentClient);
-    const currentSelectedProject = useProjectStore((state) => state.currentSelectedProject);
     const selectCurrentProject = useProjectStore((state) => state.selectCurrentProject);
 
-    // const currentClient = useClientStore((state) => state.getCurrentClient);
-    // const currentProject = useProjectStore((state) => state.getCurrentProject);
+    const currentClient = useClientStore((state) => state.getCurrentClient);
     
     useEffect(() => {
       if(hasCookie(Cookies.NAME)) {
@@ -59,8 +57,8 @@ export function Header() {
         return
       }
       const currentClient: {id: string, clientName: string} = clients.filter((client: {id: string, clientName: string}) => client.id == clientID)[0];
-      if(currentClient){
-        console.log(`printing current client: ${currentClient.clientName}`)
+      if(currentClient.id != "" && currentClient.clientName != ""){
+        console.log(`printing current client: ${currentClient.id} ${currentClient.clientName}`)
         selectCurrentClient({id: currentClient.id, name: currentClient.clientName})
         selectCurrentProject({id: "", name: ""})
       }
@@ -77,13 +75,12 @@ export function Header() {
     }
 
     const onProjectSelect = (id: string) => {
-      console.log(`selected project id: ${id}`);
       if(id == ""){
         console.log(`projectID is empty!`);
         return;
       }
       const currentProject: {id: string, name: string} = projects.filter((project: {id: string, name: string}) => project.id == id)[0];
-      if(currentProject){
+      if(currentProject.id != "" && currentProject.name != ""){
         selectCurrentProject({id: currentProject.id, name: currentProject.name})
       }
     }
@@ -103,7 +100,8 @@ export function Header() {
     }
 
     const canSelectAProject = (): boolean => {
-      if(currentSelectedClient.id == ""  || currentSelectedClient.name == ""){
+      console.log(`printing current client details!: ${currentClient().id} ${currentClient().name}`)
+      if(currentClient().id == "" || currentClient().name == ""){
         return false;
       }
       return true;

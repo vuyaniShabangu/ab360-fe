@@ -71,7 +71,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   {/* <h3 className="font-normal">{isProjectSelected() ? currentProject().name: "No project is selected."}</h3> */}
-                  <h3 className="font-normal">{isProjectSelected() ? currentProject().name: "No project is selcted."}</h3>
+                  <h3 className="font-normal">{isProjectSelected() == true ? currentProject().name: "No project is selcted."}</h3>
                   <p className="text-sm text-muted-foreground">Project</p>
                 </div>
               </div>
@@ -95,7 +95,8 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   {/* <h3 className="font-normal">{isClientSelected() ? currentClient().name: "No client selected."}</h3> */}
-                  <h3 className="font-normal">{isClientSelected() ? currentClient().name : "No Client is selected."}</h3>
+                  <h3 className="font-normal">{isClientSelected() == true ? currentClient().name : "No Client is selected."}</h3>
+
                   <p className="text-sm text-muted-foreground">Client</p>
                 </div>
               </div>
