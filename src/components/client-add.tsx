@@ -133,7 +133,7 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                     <FormItem>
                                     <FormLabel className="mt-4">Contact Person</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Contact Person..." {...field} />
+                                        <Input placeholder="Contact Person" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -146,7 +146,7 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                     <FormItem>
                                     <FormLabel className="mt-4">Website URL</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Website URL..." {...field} />
+                                        <Input placeholder="Website URL" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>

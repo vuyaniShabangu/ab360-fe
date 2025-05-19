@@ -33,6 +33,8 @@ export function Header() {
     const selectCurrentProject = useProjectStore((state) => state.selectCurrentProject);
 
     const currentClient = useClientStore((state) => state.getCurrentClient);
+    const client = useClientStore((state) => state.currentSelectedClient);
+    const project = useProjectStore((state) => state.currentSelectedProject)    
 
 
     // const getOrganizationCookies = () => {
@@ -118,7 +120,7 @@ export function Header() {
 
     return <header className="sticky top-0 z-10 flex h-16 w-full items-center justify-end border-b bg-background px-6 shadow-sm">
       <nav className="flex items-center gap-6">
-      <Select onValueChange={(value) => getClientProjects(value)}>
+      <Select onValueChange={(value) => getClientProjects(value)} defaultValue={client.id  && client.id}>
         <SelectTrigger className="w-[180px]">
           <UserIcon />
           <SelectValue placeholder="Select Client" />
@@ -130,7 +132,7 @@ export function Header() {
         </SelectContent>
       </Select>
 
-      <Select disabled={!canSelectAProject()} onValueChange={(value) => onProjectSelect(value)}>
+      <Select disabled={!canSelectAProject()} onValueChange={(value) => onProjectSelect(value)} defaultValue={project.id && project.id}>
         <SelectTrigger className="w-[180px]">
           <Folder />
           <SelectValue placeholder="Select Project" />
