@@ -14,8 +14,8 @@ export default function DashboardPage() {
   const [createProjectModal, setCreateProjectModal] = useState<boolean>(false)
   const [addClientModal, setAddClientModal] = useState<boolean>(false)
 
-  const currentClient = useClientStore((state) => state.getCurrentClient);
-  const currentProject = useProjectStore((state) => state.getCurrentProject);
+  const client = useClientStore((state) => state.currentSelectedClient)
+  const project = useProjectStore((state) => state.currentSelectedProject)
 
   const changeCreateProjectModal = (value: boolean) => {
     setCreateProjectModal(value)
@@ -27,14 +27,14 @@ export default function DashboardPage() {
 
 
   const isClientSelected = (): boolean => {
-    if(currentClient().id == "" || currentClient().name == ""){
+    if(client.id == "" || client.name == ""){
       return false;
     }
     return true
   }
 
   const isProjectSelected = (): boolean => {
-    if(currentProject().id == "" || currentProject().name == ""){
+    if(project.id == "" || project.name == ""){
       return false;
     }
     return true
@@ -70,8 +70,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  {/* <h3 className="font-normal">{isProjectSelected() ? currentProject().name: "No project is selected."}</h3> */}
-                  <h3 className="font-normal">{isProjectSelected() == true ? currentProject().name: "No project is selcted."}</h3>
+                  <h3 className="font-normal">{isProjectSelected() ? project.name : "No project is selected"}</h3>
                   <p className="text-sm text-muted-foreground">Project</p>
                 </div>
               </div>
@@ -94,9 +93,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  {/* <h3 className="font-normal">{isClientSelected() ? currentClient().name: "No client selected."}</h3> */}
-                  <h3 className="font-normal">{isClientSelected() == true ? currentClient().name : "No Client is selected."}</h3>
-
+                  <h3 className="font-normal">{isClientSelected() ? client.name: "No client is selected"}</h3>
                   <p className="text-sm text-muted-foreground">Client</p>
                 </div>
               </div>

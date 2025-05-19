@@ -13,41 +13,41 @@ interface projectState {
     getCurrentProject: () => project
 }
 
-const useProjectStore = create<projectState>()(
-    persist(
-        ((set, get) => ({
-            currentSelectedProject: {
-                id: "",
-                name: ""
-            },
-            selectCurrentProject: ({ id, name }) => set((state) => ({
-                ...state,
-                currentSelectedProject: {
-                    id,
-                    name
-                }
-            })),
-            getCurrentProject: () => get().currentSelectedProject
-        })),
-        {
-            name: "current-project"
-        }
-    )
-)
-
-// const useProjectStore = create<projectState>((set, get) => ({
-//     currentSelectedProject: {
-//         id: "",
-//         name: ""
-//     },
-//     selectCurrentProject: ({id, name}) => set((state) => ({
-//         ...state,
-//         currentSelectedProject: {
-//             id: id,
-//             name: name
+// const useProjectStore = create<projectState>()(
+//     persist(
+//         ((set, get) => ({
+//             currentSelectedProject: {
+//                 id: "",
+//                 name: ""
+//             },
+//             selectCurrentProject: ({ id, name }) => set((state) => ({
+//                 ...state,
+//                 currentSelectedProject: {
+//                     id,
+//                     name
+//                 }
+//             })),
+//             getCurrentProject: () => get().currentSelectedProject
+//         })),
+//         {
+//             name: "current-project"
 //         }
-//     })),
-//     getCurrentProject: () => get().currentSelectedProject
-// }))
+//     )
+// )
+
+const useProjectStore = create<projectState>((set, get) => ({
+    currentSelectedProject: {
+        id: "",
+        name: ""
+    },
+    selectCurrentProject: ({ id, name }) => set((state) => ({
+        ...state,
+        currentSelectedProject: {
+            id: id,
+            name: name
+        }
+    })),
+    getCurrentProject: () => get().currentSelectedProject
+}))
 
 export default useProjectStore;

@@ -13,18 +13,45 @@ import { HttpMethods } from "@/constants/api_methods";
 import useClientStore from "@/stores/clientStore";
 import useProjectStore from "@/stores/projectStore";
 
+
+interface project {
+  id: string,
+  name: string
+}
+interface client {
+  id: string,
+  clientName: string,
+  organisationId: string,
+  projects: project[]
+}
+
 export function Header() {
     const [userName, setUserName] = useState("")
-    const {data, error, isPending} = authClient.useListOrganizations()
-    const [clients, setClients] = useState([])
-    const [projects, setProjects] = useState([])
+    const [clients, setClients] = useState<client[]>([])
+    const [projects, setProjects] = useState<project[]>([])
 
     const selectCurrentClient = useClientStore((state) => state.selectCurrentClient);
     const selectCurrentProject = useProjectStore((state) => state.selectCurrentProject);
 
     const currentClient = useClientStore((state) => state.getCurrentClient);
+
+
+    // const getOrganizationCookies = () => {
+    //   if(isPending){
+    //     console.log(`getting organization is still pending!`)
+    //   }else{
+    //     console.log(`done getting user organization details: ${data}`)
+    //     if(data?.length){
+    //       setCookie(Cookies.ORGANIZATION_ID, data[0].id);
+    //       setCookie(Cookies.ORGANIZATION_NAME, data[0].name)
+    //       return; 
+    //     }
+    //   }
+    // }
+    // getOrganizationCookies();
     
     useEffect(() => {
+
       if(hasCookie(Cookies.NAME)) {
         const cookieValue =  getCookie(Cookies.NAME)
         if(cookieValue){
@@ -44,6 +71,7 @@ export function Header() {
       apiRequest(HttpMethods.GET, url, {})
       .then(data => {
         setClients(data.data)
+        // console.log(`all organization clients: `, data.data);
       })
       .catch(err => {
         console.log(`Error getting clients`);
@@ -56,22 +84,17 @@ export function Header() {
         console.log("clientID is empty")
         return
       }
-      const currentClient: {id: string, clientName: string} = clients.filter((client: {id: string, clientName: string}) => client.id == clientID)[0];
-      if(currentClient.id != "" && currentClient.clientName != ""){
-        console.log(`printing current client: ${currentClient.id} ${currentClient.clientName}`)
-        selectCurrentClient({id: currentClient.id, name: currentClient.clientName})
-        selectCurrentProject({id: "", name: ""})
+      const currentClient: client = clients.filter((client: {id: string}) => client.id == clientID)[0];
+      if(currentClient == null){  
+        console.log("Selected client is null!");
+        return;
+      }  
+      selectCurrentClient({id: currentClient.id, name: currentClient.clientName})
+      selectCurrentProject({id: "", name: ""})
+
+      if(currentClient.projects){
+        setProjects(currentClient.projects)
       }
-      const url =  `${APIRoutes.ORGANIZATIONS.PROJECT}/${clientID}/projects`;
-      apiRequest(HttpMethods.GET, url, {})
-      .then(data => {
-        console.log(`Projects, `, data.data);
-        setProjects(data.data);
-      })
-      .catch(err => {
-        console.log(`Error getting projects`);
-        console.log(err);
-      })
     }
 
     const onProjectSelect = (id: string) => {
@@ -79,28 +102,15 @@ export function Header() {
         console.log(`projectID is empty!`);
         return;
       }
-      const currentProject: {id: string, name: string} = projects.filter((project: {id: string, name: string}) => project.id == id)[0];
-      if(currentProject.id != "" && currentProject.name != ""){
-        selectCurrentProject({id: currentProject.id, name: currentProject.name})
+      const project: project = projects.filter((project: {id: string, name: string}) => project.id == id)[0];
+      if(project == null){
+        console.log("selected project is null!")
+        return;
       }
-    }
-
-    if(!isPending) {
-      if(!error && data){
-        if(data[0] != null) {
-          console.log("organzation info, ", data[0])
-          const organizationId: string|null = data[0].id;
-          const organizationName: string|null = data[0].name;
-          if(organizationId != null && organizationName != null) {
-          setCookie(Cookies.ORGANIZATION_ID, organizationId);
-          setCookie(Cookies.ORGANIZATION_NAME, organizationName);
-          }
-        }
-      }
+      selectCurrentProject({id: project.id, name: project.name})
     }
 
     const canSelectAProject = (): boolean => {
-      console.log(`printing current client details!: ${currentClient().id} ${currentClient().name}`)
       if(currentClient().id == "" || currentClient().name == ""){
         return false;
       }
@@ -121,7 +131,7 @@ export function Header() {
         </SelectContent>
       </Select>
 
-      <Select disabled={canSelectAProject() == false} onValueChange={(value) => onProjectSelect(value)}>
+      <Select disabled={!canSelectAProject()} onValueChange={(value) => onProjectSelect(value)}>
         <SelectTrigger className="w-[180px]">
           <Folder />
           <SelectValue placeholder="Select Project" />

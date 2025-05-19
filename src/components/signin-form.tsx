@@ -23,6 +23,7 @@ import { authClient, signIn } from '@/lib/auth-client';
 import { PageRoutes } from '@/constants/page_routes';
 import { setCookie } from 'cookies-next';
 import { Cookies } from '@/constants/cookies';
+import { cookies } from 'next/headers';
 
 
 const formSchema = z.object({
@@ -57,35 +58,44 @@ export function SigninForm({
       password: values.password,
     });
 
-    console.log("login response, " +{ response });
+    console.log("login response, " + { response });
 
     if (response.error) {
       toast.error(response.error.message, {
         description: response.error.message,
       });
-      console.log(response.error)
-      return
+      console.log(response.error);
+      return;
     } else if (response.data) {
-      toast.success('Logged in successfully');
+      toast.success("Logged in successfully");
       document.cookie = `name=${response.data.user.name}`;
       document.cookie = `id=${response.data.user.id}`;
 
-      if(!isPending) {
-        if(!error && data){
-          if(data[0] != null) {
-            const organizationId: string|null = data[0].id;
-            const organizationName: string|null = data[0].name;
-            if(organizationId != null && organizationName != null) {
-            setCookie(Cookies.ORGANIZATION_ID, organizationId);
-            setCookie(Cookies.ORGANIZATION_NAME, organizationName);
-            }
+      let pending = true;
+      while (pending) {
+        if (isPending == false) {
+          pending = false;
+          break;
+        }
+      }
+
+      let hasData = false;
+      if (!pending) {
+        while (!hasData) {
+          if (data != null) {
+            hasData = true;
+            break;
           }
         }
       }
+
+      if (hasData) {
+        setCookie(Cookies.ORGANIZATION_ID, data[0].id);
+        setCookie(Cookies.ORGANIZATION_NAME, data[0].name);
+        router.push(PageRoutes.DASHBOARD);
+      }
     }
-      
-      router.push(PageRoutes.DASHBOARD);
-    }
+  };
   
 
   const signInWithSocial = async () => {
