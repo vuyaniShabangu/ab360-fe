@@ -125,7 +125,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
       `${APIRoutes.ORGANIZATIONS.CREATE_PROJECT}/${client.id}/projects`,
       { name: values.name, description: values.description }
     )
-      .then((response) => {
+      .then(() => {
         setOpen(false);
         form.reset({ name: "", client: "", description: "" });
         setLoading(false);
