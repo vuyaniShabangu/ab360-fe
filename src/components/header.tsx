@@ -7,11 +7,10 @@ import { Cookies } from "@/constants/cookies";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Folder, UserIcon } from "lucide-react";
 import { APIRoutes } from "@/constants/api_routes";
-import { apiRequest } from "@/api";
+import { authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import useClientStore from "@/stores/use-client-store";
 import useProjectStore from "@/stores/use-project-store";
-
 
 interface project {
   id: string,
@@ -35,7 +34,7 @@ export function Header() {
     const currentClient = useClientStore((state) => state.getCurrentClient);
     const client = useClientStore((state) => state.currentSelectedClient);
     const project = useProjectStore((state) => state.currentSelectedProject)    
-
+    const clientAdded = useClientStore((state) => state.clientAdded)
 
     // const getOrganizationCookies = () => {
     //   if(isPending){
@@ -64,12 +63,12 @@ export function Header() {
         getOrganizationClients();
       }
   
-    }, [])
+    }, [clientAdded])
 
     const getOrganizationClients = async() => {
       const id = `${getCookie(Cookies.ORGANIZATION_ID)}`
       const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${id}/clients`;
-      apiRequest(HttpMethods.GET, url, {})
+      authorizedApiRequest(HttpMethods.GET, url, {})
       .then(data => {
         setClients(data.data)
         // console.log(`all organization clients: `, data.data);
