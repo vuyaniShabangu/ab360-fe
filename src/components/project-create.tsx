@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Textarea } from "./ui/textarea";
-import { apiRequest } from "@/api";
+import { authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import { APIRoutes } from "@/constants/api_routes";
 import { getCookie, hasCookie } from "cookies-next";
@@ -73,7 +73,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
     (state) => state.selectCurrentProject
   );
   const client = useClientStore((state) => state.currentSelectedClient);
-
+  const clientAdded = useClientStore((state) => state.clientAdded);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,12 +88,12 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
     if (hasCookie(Cookies.ORGANIZATION_ID)) {
       getOrganizationClients();
     }
-  }, []);
+  }, [clientAdded]);
 
   const getOrganizationClients = async () => {
     const id = `${getCookie(Cookies.ORGANIZATION_ID)}`;
     const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${id}/clients`;
-    apiRequest(HttpMethods.GET, url, {})
+    authorizedApiRequest(HttpMethods.GET, url, {})
       .then((data) => {
         setClients(data.data);
         // console.log(`all organization clients: `, data.data);
@@ -106,7 +106,8 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
 
   const onClientChange = (value: string) => {
     const currentClient: client = clients.filter(
-      (client: { id: string }) => client.id == value)[0];
+      (client: { id: string }) => client.id == value
+    )[0];
     if (currentClient == null) {
       console.log("Selected client is null!");
       return;
@@ -120,7 +121,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    apiRequest(
+    authorizedApiRequest(
       HttpMethods.POST,
       `${APIRoutes.ORGANIZATIONS.CREATE_PROJECT}/${client.id}/projects`,
       { name: values.name, description: values.description }
