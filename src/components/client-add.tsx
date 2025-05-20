@@ -101,9 +101,9 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                 name="clientName"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>ClientName</FormLabel>
+                                    <FormLabel>Client Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="ClientName" {...field} />
+                                        <Input placeholder="Client Name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -118,7 +118,7 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                     <FormControl>
                                     <Textarea
                                         {...field}
-                                        placeholder="Description here"
+                                        placeholder="Description"
                                         className=""
                                     />
                                     </FormControl>
@@ -133,7 +133,7 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                     <FormItem>
                                     <FormLabel className="mt-4">Contact Person</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Contact Person..." {...field} />
+                                        <Input placeholder="Contact Person" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -146,7 +146,7 @@ const ClientCreateDialogue = ({open, setOpen}: Props) => {
                                     <FormItem>
                                     <FormLabel className="mt-4">Website URL</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Website URL..." {...field} />
+                                        <Input placeholder="Website URL" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
