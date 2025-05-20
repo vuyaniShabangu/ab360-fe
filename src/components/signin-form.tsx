@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -14,88 +14,86 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
-import { authClient, signIn } from '@/lib/auth-client';
-import { PageRoutes } from '@/constants/page_routes';
-import { setCookie } from 'cookies-next';
-import { Cookies } from '@/constants/cookies';
-
+} from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { signIn } from "@/lib/auth-client";
+import { PageRoutes } from "@/constants/page_routes";
+import { setCookie } from "cookies-next";
+import { Cookies } from "@/constants/cookies";
+import { authorizedApiRequest } from "@/api";
+import { HttpMethods } from "@/constants/api_methods";
+import { APIRoutes } from "@/constants/api_routes";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().min(2, {
-    message: 'Email must be at least 2 characters.',
+    message: "Email must be at least 2 characters.",
   }),
   password: z.string().min(8, {
-    message: 'Password must be at least 8 characters.',
+    message: "Password must be at least 8 characters.",
   }),
 });
 
 export function SigninForm({
   className,
   ...props
-}: React.ComponentProps<'form'>) {
+}: React.ComponentProps<"form">) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const {data, isPending} = authClient.useListOrganizations()
-
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
     const response = await signIn.email({
       email: values.email,
       password: values.password,
     });
-
-    console.log("login response, " + { response });
 
     if (response.error) {
       toast.error(response.error.message, {
         description: response.error.message,
       });
       console.log(response.error);
+      setLoading(false);
       return;
     } else if (response.data) {
-      toast.success("Logged in successfully");
-      document.cookie = `name=${response.data.user.name}`;
-      document.cookie = `id=${response.data.user.id}`;
+      setCookie(Cookies.ID, response.data.user.id);
+      setCookie(Cookies.NAME, response.data.user.name);
+      authorizedApiRequest(
+        HttpMethods.GET,
+        `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${response.data.user.id}`,
+        {}
+      )
+        .then((data) => {
+          if (data.data[0]) {
+            setCookie(Cookies.ORGANIZATION_ID, data.data[0].id);
+            setCookie(Cookies.ORGANIZATION_NAME, data.data[0].name);
 
-      let pending = true;
-      while (pending) {
-        if (isPending == false) {
-          pending = false;
-          break;
-        }
-      }
-
-      let hasData = false;
-      if (!pending) {
-        while (!hasData) {
-          if (data != null) {
-            hasData = true;
-            break;
+            toast.success("Logged in successfully");
+            setLoading(false);
+            router.push(PageRoutes.DASHBOARD);
+            return;
           }
-        }
-      }
-
-      if (hasData && data) {
-        setCookie(Cookies.ORGANIZATION_ID, data[0].id);
-        setCookie(Cookies.ORGANIZATION_NAME, data[0].name);
-        router.push(PageRoutes.DASHBOARD);
-      }
+          toast.error("Login unsuccessful");
+          setLoading(false);
+          return;
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
-  
 
   const signInWithSocial = async () => {
     // toast.info('Coming soon');
@@ -103,8 +101,8 @@ export function SigninForm({
 
     signIn.social(
       {
-        provider: 'google',
-        callbackURL: '/auth/callback',
+        provider: "google",
+        callbackURL: "/auth/callback",
       },
       {
         onRequest: () => {
@@ -118,16 +116,16 @@ export function SigninForm({
 
           if (!response.body) {
             toast.error(
-              'ReadableStream not supported or response has no body.'
+              "ReadableStream not supported or response has no body."
             );
             throw new Error(
-              'ReadableStream not supported or response has no body.'
+              "ReadableStream not supported or response has no body."
             );
           }
 
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
-          let result = '';
+          let result = "";
 
           while (true) {
             const { done, value } = await reader.read();
@@ -142,7 +140,7 @@ export function SigninForm({
             JSON.parse(result);
 
           // router.push(parsedResult.data.url);
-          window.open(parsedResult.data.url, '_blank');
+          window.open(parsedResult.data.url, "_blank");
         },
       }
     );
@@ -152,7 +150,7 @@ export function SigninForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('flex flex-col gap-6', className)}
+        className={cn("flex flex-col gap-6", className)}
         {...props}
       >
         <div className="flex flex-col items-center gap-2 text-center">
@@ -196,9 +194,16 @@ export function SigninForm({
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Sign in
-          </Button>
+          {loading ? (
+            <Button disabled>
+              <Loader2 className="animate-spin" />
+              Please wait
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full">
+              Sign in
+            </Button>
+          )}
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
             <span className="bg-background text-muted-foreground relative z-10 px-2">
               Or continue with
@@ -206,14 +211,14 @@ export function SigninForm({
           </div>
           <div
             className={cn(
-              'w-full gap-2 flex items-center',
-              'justify-between flex-col'
+              "w-full gap-2 flex items-center",
+              "justify-between flex-col"
             )}
           >
             <Button
               type="button"
               variant="outline"
-              className={cn('w-full gap-2')}
+              className={cn("w-full gap-2")}
               disabled={loading}
               onClick={signInWithSocial}
             >
@@ -223,7 +228,7 @@ export function SigninForm({
           </div>
         </div>
         <div className="text-center text-sm">
-          Don&apos;t have an account?{' '}
+          Don&apos;t have an account?{" "}
           <Link href="/sign-up" className="underline underline-offset-4">
             Sign up
           </Link>
