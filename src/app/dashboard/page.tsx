@@ -1,44 +1,82 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
-import { MenuItem } from "@/types/menu-items.enum"
-import { Header } from "@/components/header"
-import { useState } from "react"
-import ProjectCreateDialogue from "@/components/project-create"
-import ClientCreateDialogue from "@/components/client-add"
-import useClientStore from "@/stores/use-client-store"
-import useProjectStore from "@/stores/use-project-store"
+import { Button } from "@/components/ui/button";
+import { DashboardSidebar } from "@/components/dashboard-sidebar";
+import { MenuItem } from "@/types/menu-items.enum";
+import { Header } from "@/components/header";
+import { useEffect, useState } from "react";
+import ProjectCreateDialogue from "@/components/project-create";
+import ClientCreateDialogue from "@/components/client-add";
+import useClientStore from "@/stores/use-client-store";
+import useProjectStore from "@/stores/use-project-store";
+import { getCookie } from "cookies-next";
+import { Cookies } from "@/constants/cookies";
+import { APIRoutes } from "@/constants/api_routes";
+import { authorizedApiRequest } from "@/api";
+import { HttpMethods } from "@/constants/api_methods";
+import { Skeleton } from "@/components/ui/skeleton";
+
+interface project {
+  id: string;
+  name: string;
+}
+interface client {
+  id: string;
+  clientName: string;
+  projects: project[];
+}
 
 export default function DashboardPage() {
-  const [createProjectModal, setCreateProjectModal] = useState<boolean>(false)
-  const [addClientModal, setAddClientModal] = useState<boolean>(false)
+  const [createProjectModal, setCreateProjectModal] = useState<boolean>(false);
+  const [addClientModal, setAddClientModal] = useState<boolean>(false);
+  const [clients, setClients] = useState<client[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const client = useClientStore((state) => state.currentSelectedClient)
-  const project = useProjectStore((state) => state.currentSelectedProject)
+  const client = useClientStore((state) => state.currentSelectedClient);
+  const project = useProjectStore((state) => state.currentSelectedProject);
+  const clientAdded = useClientStore((state) => state.clientAdded)
 
   const changeCreateProjectModal = (value: boolean) => {
-    setCreateProjectModal(value)
-  }
+    setCreateProjectModal(value);
+  };
 
   const changeAddClientModal = (value: boolean) => {
-    setAddClientModal(value)
-  }
+    setAddClientModal(value);
+  };
 
+  useEffect(() => {
+    getOrganizationClients();
+  }, [clientAdded]);
+
+  const getOrganizationClients = async () => {
+    setLoading(true);
+    const id = `${getCookie(Cookies.ORGANIZATION_ID)}`;
+    const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${id}/clients`;
+    authorizedApiRequest(HttpMethods.GET, url, {})
+      .then((data) => {
+        setClients(data.data);
+        setLoading(false);
+        // console.log(`all organization clients: `, data.data);
+      })
+      .catch((err) => {
+        console.log(`Error getting clients`);
+        console.log(err);
+      });
+  };
 
   const isClientSelected = (): boolean => {
-    if(client.id == "" || client.name == ""){
+    if (client.id == "" || client.name == "") {
       return false;
     }
-    return true
-  }
+    return true;
+  };
 
   const isProjectSelected = (): boolean => {
-    if(project.id == "" || project.name == ""){
+    if (project.id == "" || project.name == "") {
       return false;
     }
-    return true
-  }
+    return true;
+  };
 
   return (
     <div className="flex bg-background font-lexend">
@@ -47,8 +85,14 @@ export default function DashboardPage() {
         <Header />
         <main className="p-6">
           <h1 className="text-3xl font-normal">Dashboard</h1>
-          <ProjectCreateDialogue open={createProjectModal} setOpen={changeCreateProjectModal}/>
-          <ClientCreateDialogue open={addClientModal} setOpen={changeAddClientModal}/>
+          <ProjectCreateDialogue
+            open={createProjectModal}
+            setOpen={changeCreateProjectModal}
+          />
+          <ClientCreateDialogue
+            open={addClientModal}
+            setOpen={changeAddClientModal}
+          />
           <section className="mt-8">
             <h2 className="text-xl font-normal">Current Selection</h2>
             <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -70,7 +114,11 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-normal">{isProjectSelected() ? project.name : "No project is selected"}</h3>
+                  <h3 className="font-normal">
+                    {isProjectSelected()
+                      ? project.name
+                      : "No project is selected"}
+                  </h3>
                   <p className="text-sm text-muted-foreground">Project</p>
                 </div>
               </div>
@@ -93,7 +141,9 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-normal">{isClientSelected() ? client.name: "No client is selected"}</h3>
+                  <h3 className="font-normal">
+                    {isClientSelected() ? client.name : "No client is selected"}
+                  </h3>
                   <p className="text-sm text-muted-foreground">Client</p>
                 </div>
               </div>
@@ -103,59 +153,76 @@ export default function DashboardPage() {
           <section className="mt-8">
             <h2 className="text-lg font-normal">Clients & Projects</h2>
             <div className="mt-4 flex gap-3">
-              <Button onClick={() => setAddClientModal(true)} className="px-4 cursor-pointer py-2 font-semibold text-white shadow-md hover:shadow-lg transition duration-300 ease-in-out"
-                style={{ background: "linear-gradient(top bottom, #E4BB90, #B7926D)" }}>Add Client</Button>
-              <Button onClick={() => setCreateProjectModal(true)} className="cursor-pointer" variant="outline">Add Project</Button>
+              <Button
+                onClick={() => setAddClientModal(true)}
+                className="px-4 cursor-pointer py-2 font-semibold text-white shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+                style={{
+                  background: "linear-gradient(top bottom, #E4BB90, #B7926D)",
+                }}
+              >
+                Add Client
+              </Button>
+              <Button
+                onClick={() => setCreateProjectModal(true)}
+                className="cursor-pointer"
+                variant="outline"
+              >
+                Add Project
+              </Button>
             </div>
 
-            <div className="mt-4 rounded-lg border font-light text-sm">
-              <div className="grid grid-cols-2 border-b px-6 py-3 font-normal">
-                <div>Client</div>
-                <div>Projects</div>
-              </div>
-
-              {clients.map((client, index) => (
-                <div key={index} className="grid grid-cols-2 border-b px-6 py-4 last:border-0">
-                  <div>{client.name}</div>
-                  <div className="text-muted-foreground">
-                    {client.projects.map((project, pIndex) => (
-                      <span key={pIndex}>
-                        {project}
-                        {pIndex < client.projects.length - 1 && ", "}
-                      </span>
-                    ))}
-                  </div>
+            {loading ? (
+              <div className="mt-4 rounded-lg border font-light text-sm">
+                <div className="grid grid-cols-2 border-b px-6 py-3 font-normal">
+                  <Skeleton className="h-5 w-[80px]" />
+                  <Skeleton className="h-5 w-[90px]" />
                 </div>
-              ))}
-            </div>
+                <div className="grid grid-cols-2 border-b px-6 py-4 last:border-0">
+                  <Skeleton className="h-3 w-[110px]" />
+                  <Skeleton className="h-3 w-[190px]" />
+                </div>
+                <div className="grid grid-cols-2 border-b px-6 py-4 last:border-0">
+                  <Skeleton className="h-3 w-[120px]" />
+                  <Skeleton className="h-3 w-[175px]" />
+                </div>
+                <div className="grid grid-cols-2 border-b px-6 py-4 last:border-0">
+                  <Skeleton className="h-3 w-[150px]" />
+                  <Skeleton className="h-3 w-[180px]" />
+                </div>
+                <div className="grid grid-cols-2 border-b px-6 py-4 last:border-0">
+                  <Skeleton className="h-3 w-[120px]" />
+                  <Skeleton className="h-3 w-[190px]" />
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4 rounded-lg border font-light text-sm">
+                <div className="grid grid-cols-2 border-b px-6 py-3 font-normal">
+                  <div>Client</div>
+                  <div>Projects</div>
+                </div>
+                {clients.length &&
+                  clients.map((client) => (
+                    <div
+                      key={client.id}
+                      className="grid grid-cols-2 border-b px-6 py-4 last:border-0"
+                    >
+                      <div>{client.clientName}</div>
+                      <div className="text-muted-foreground">
+                        {client.projects.map((project, pIndex) => (
+                          <span key={project.id}>
+                            {project.name}
+                            {pIndex < client.projects.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
           </section>
         </main>
       </div>
     </div>
-  )
+  );
 }
-
-const clients = [
-  {
-    name: "TechStart Innovations",
-    projects: ["Project Alpha", "Project Beta"],
-  },
-  {
-    name: "FitLife Dynamics",
-    projects: ["Project Gamma", "Project Delta"],
-  },
-  {
-    name: "CreativeGen Studios",
-    projects: ["Project Epsilon", "Project Zeta"],
-  },
-  {
-    name: "EduTech Nexus",
-    projects: ["Project Theta", "Project Eta"],
-  },
-  {
-    name: "EcoGreen Ventures",
-    projects: ["Project Iota", "Project Kappa"],
-  },
-]
-
 
