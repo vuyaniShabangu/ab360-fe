@@ -122,7 +122,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
     setLoading(true);
     apiRequest(
       HttpMethods.POST,
-      `${APIRoutes.ORGANIZATIONS.CREATE_PROJECT}/${values.client}/projects`,
+      `${APIRoutes.ORGANIZATIONS.CREATE_PROJECT}/${client.id}/projects`,
       { name: values.name, description: values.description }
     )
       .then((response) => {
