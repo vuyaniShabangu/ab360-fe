@@ -40,8 +40,8 @@ import useClientStore from "@/stores/use-client-store";
 import useProjectStore from "@/stores/use-project-store";
 
 const formSchema = z.object({
-  name: z.string({ message: "The name is required" }).max(100),
-  description: z.string({ message: "The description is required" }).max(100),
+  name: z.string({ message: "The name is required" }).max(100).min(1),
+  description: z.string({ message: "The description is required" }).max(100).min(1),
   client: z.string({ required_error: "client is required" }),
 });
 
@@ -120,6 +120,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
   };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+
     setLoading(true);
     authorizedApiRequest(
       HttpMethods.POST,
@@ -215,7 +216,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
                     Please wait
                   </Button>
                 ) : (
-                  <Button className="cursor-pointer" type="submit">
+                  <Button   className="cursor-pointer" type="submit">
                     Add Project
                   </Button>
                 )}

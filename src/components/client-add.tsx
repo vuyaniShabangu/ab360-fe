@@ -35,8 +35,8 @@ const formSchema = z.object({
   clientName: z.string({ message: "The name is required" }).max(100),
   description: z.string({ message: "The description is required" }).max(100),
   websiteUrl: z
-    .string({ message: "websiteUrl is required" })
-    .url({ message: "The Url link must be valid." }),
+    .string({ message: "Website URL is required" })
+    .url({ message: "The URL link must be valid." }),
   contactPerson: z.string({ message: "Contact person is required" }),
 });
 
