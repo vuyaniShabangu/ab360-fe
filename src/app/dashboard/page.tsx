@@ -4,26 +4,21 @@ import { Button } from "@/components/ui/button"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { MenuItem } from "@/types/menu-items.enum"
 import { Header } from "@/components/header"
-import { useState } from "react"
 import ProjectCreateDialogue from "@/components/project-create"
 import ClientCreateDialogue from "@/components/client-add"
 import useClientStore from "@/stores/use-client-store"
 import useProjectStore from "@/stores/use-project-store"
+import useCreationModalsStore from "@/stores/use-modals-store"
 
 export default function DashboardPage() {
-  const [createProjectModal, setCreateProjectModal] = useState<boolean>(false)
-  const [addClientModal, setAddClientModal] = useState<boolean>(false)
+  const projectCreateOpen = useCreationModalsStore((state) => state.projectreateOpen)
+  const clientCreateOpen = useCreationModalsStore((state) => state.clientCreateOpen)
+
+  const changeClientCreateOpen = useCreationModalsStore((state) => state.changeClientCreateOpen);
+  const changeProjectCreateOpen = useCreationModalsStore((state) => state.changeProjectCreateOpen);
 
   const client = useClientStore((state) => state.currentSelectedClient)
   const project = useProjectStore((state) => state.currentSelectedProject)
-
-  const changeCreateProjectModal = (value: boolean) => {
-    setCreateProjectModal(value)
-  }
-
-  const changeAddClientModal = (value: boolean) => {
-    setAddClientModal(value)
-  }
 
 
   const isClientSelected = (): boolean => {
@@ -47,8 +42,8 @@ export default function DashboardPage() {
         <Header />
         <main className="p-6">
           <h1 className="text-3xl font-normal">Dashboard</h1>
-          <ProjectCreateDialogue open={createProjectModal} setOpen={changeCreateProjectModal}/>
-          <ClientCreateDialogue open={addClientModal} setOpen={changeAddClientModal}/>
+          <ProjectCreateDialogue open={projectCreateOpen} setOpen={changeProjectCreateOpen}/>
+          <ClientCreateDialogue open={clientCreateOpen} setOpen={changeClientCreateOpen}/>
           <section className="mt-8">
             <h2 className="text-xl font-normal">Current Selection</h2>
             <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -103,9 +98,9 @@ export default function DashboardPage() {
           <section className="mt-8">
             <h2 className="text-lg font-normal">Clients & Projects</h2>
             <div className="mt-4 flex gap-3">
-              <Button onClick={() => setAddClientModal(true)} className="px-4 cursor-pointer py-2 font-semibold text-white shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+              <Button onClick={() => changeClientCreateOpen(true)} className="px-4 cursor-pointer py-2 font-semibold text-white shadow-md hover:shadow-lg transition duration-300 ease-in-out"
                 style={{ background: "linear-gradient(top bottom, #E4BB90, #B7926D)" }}>Add Client</Button>
-              <Button onClick={() => setCreateProjectModal(true)} className="cursor-pointer" variant="outline">Add Project</Button>
+              <Button onClick={() => changeProjectCreateOpen(true)} className="cursor-pointer" variant="outline">Add Project</Button>
             </div>
 
             <div className="mt-4 rounded-lg border font-light text-sm">
