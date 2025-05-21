@@ -8,6 +8,9 @@ interface project {
 
 interface projectState {
     currentSelectedProject: project,
+    projectAdded: boolean,
+
+    projectIsAdded: () => void,
     selectCurrentProject: (project: project) => void,
     getCurrentProject: () => project
 }
@@ -39,6 +42,11 @@ const useProjectStore = create<projectState>((set, get) => ({
         id: "",
         name: ""
     },
+    projectAdded: true,
+    projectIsAdded: () => set((state) => ({
+        ...state,
+        projectAdded: !state.projectAdded
+    })),
     selectCurrentProject: ({ id, name }) => set((state) => ({
         ...state,
         currentSelectedProject: {

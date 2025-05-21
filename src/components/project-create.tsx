@@ -74,6 +74,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
   );
   const client = useClientStore((state) => state.currentSelectedClient);
   const clientAdded = useClientStore((state) => state.clientAdded);
+  const clientIsAdded = useClientStore((state) => state.clientIsAdded);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -130,6 +131,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
       .then(() => {
         setOpen(false);
         form.reset({ name: "", client: "", description: "" });
+        clientIsAdded(true);
         setLoading(false);
       })
       .catch((error) => {

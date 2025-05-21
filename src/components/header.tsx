@@ -35,20 +35,6 @@ export function Header() {
     const client = useClientStore((state) => state.currentSelectedClient);
     const project = useProjectStore((state) => state.currentSelectedProject)    
     const clientAdded = useClientStore((state) => state.clientAdded)
-
-    // const getOrganizationCookies = () => {
-    //   if(isPending){
-    //     console.log(`getting organization is still pending!`)
-    //   }else{
-    //     console.log(`done getting user organization details: ${data}`)
-    //     if(data?.length){
-    //       setCookie(Cookies.ORGANIZATION_ID, data[0].id);
-    //       setCookie(Cookies.ORGANIZATION_NAME, data[0].name)
-    //       return; 
-    //     }
-    //   }
-    // }
-    // getOrganizationCookies();
     
     useEffect(() => {
 
@@ -63,9 +49,9 @@ export function Header() {
         getOrganizationClients();
       }
   
-    }, [clientAdded])
+    }, [clientAdded, client])
 
-    const getOrganizationClients = async() => {
+    const getOrganizationClients = () => {
       const id = `${getCookie(Cookies.ORGANIZATION_ID)}`
       const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${id}/clients`;
       authorizedApiRequest(HttpMethods.GET, url, {})

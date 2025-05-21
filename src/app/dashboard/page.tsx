@@ -34,7 +34,7 @@ export default function DashboardPage() {
 
   const client = useClientStore((state) => state.currentSelectedClient);
   const project = useProjectStore((state) => state.currentSelectedProject);
-  const clientAdded = useClientStore((state) => state.clientAdded)
+  const projectAdded = useProjectStore((state) => state.projectAdded)
 
   const changeCreateProjectModal = (value: boolean) => {
     setCreateProjectModal(value);
@@ -44,11 +44,12 @@ export default function DashboardPage() {
     setAddClientModal(value);
   };
 
+
   useEffect(() => {
     getOrganizationClients();
-  }, [clientAdded]);
+  }, [projectAdded, client]);
 
-  const getOrganizationClients = async () => {
+  const getOrganizationClients = () => {
     setLoading(true);
     const id = `${getCookie(Cookies.ORGANIZATION_ID)}`;
     const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${id}/clients`;

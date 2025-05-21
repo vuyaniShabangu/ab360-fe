@@ -8,8 +8,8 @@ interface client {
 interface clientState {
     currentSelectedClient: client,
     clientAdded: boolean,
-    
-    clientIsAdded: () => void;
+
+    clientIsAdded: (value: boolean) => void;
     selectCurrentClient: (client: client) => void
     getCurrentClient: () => client
 }
@@ -19,6 +19,7 @@ const useClientStore = create<clientState>((set, get) => ({
         id: "",
         name: ""
     },
+    clientAdded: true,
     selectCurrentClient: ({ id, name }) => set((state) => ({
         ...state,
         currentSelectedClient: {
@@ -27,10 +28,9 @@ const useClientStore = create<clientState>((set, get) => ({
         }
     })),
     getCurrentClient: () => get().currentSelectedClient,
-    clientAdded: false,
-    clientIsAdded: () => set((state) => ({
+    clientIsAdded: (value: boolean) => set((state) => ({
         ...state,
-        clientAdded: !state.clientAdded
+        clientAdded: value
     }))
 }))
 
