@@ -116,6 +116,7 @@ const ProjectCreateDialogue = ({ open, setOpen }: Props) => {
     selectCurrentClient({
       id: currentClient.id,
       name: currentClient.clientName,
+      projects: currentClient.projects
     });
     selectCurrentProject({ id: "", name: "" });
   };
