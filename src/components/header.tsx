@@ -49,6 +49,7 @@ export function Header() {
   const selectCurrentClient = useClientStore(
     (state) => state.selectCurrentClient
   );
+
   const selectCurrentProject = useProjectStore(
     (state) => state.selectCurrentProject
   );
@@ -60,6 +61,7 @@ export function Header() {
   const projectCreateOpen = useCreationModalsStore(
     (state) => state.projectreateOpen
   );
+
   const clientCreateOpen = useCreationModalsStore(
     (state) => state.clientCreateOpen
   );
@@ -67,6 +69,7 @@ export function Header() {
   const changeClientCreateOpen = useCreationModalsStore(
     (state) => state.changeClientCreateOpen
   );
+
   const changeProjectCreateOpen = useCreationModalsStore(
     (state) => state.changeProjectCreateOpen
   );
@@ -112,11 +115,13 @@ export function Header() {
       console.log("Selected client is null!");
       return;
     }
+    
     selectCurrentClient({
       id: currentClient.id,
       name: currentClient.clientName,
       projects: currentClient.projects,
     });
+
     selectCurrentProject({ id: "", name: "" });
 
     if (currentClient.projects) {
