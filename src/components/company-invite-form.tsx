@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
 import { getCookie } from "cookies-next";
 import { Cookies } from "@/constants/cookies";
-import { apiRequest } from "@/api";
+import { apiRequest, authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import { APIRoutes } from "@/constants/api_routes";
 
@@ -46,35 +46,36 @@ export function CompanyInviteForm({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const uniqueEmails = new Set(invites);
-    if (uniqueEmails.has(values.email)) {
-      toast.error("An invite has already been sent!");
+    const emails = new Set(invites);
+    if(emails.has(values.email)){
+      toast.warning("An invitation has already been sent!");
       return;
-    } else {
-      if (values.email) {
-        setLoading(true);
-        const url = `${
-          APIRoutes.ORGANIZATIONS.GET_ORGANIZATION
-        }/${getCookie(Cookies.ORGANIZATION_ID)}/invitation`;
-        apiRequest(HttpMethods.POST, url, {
-          orgId: `${getCookie(Cookies.ORGANIZATION_ID)}`,
-          email: values.email,
-          userId: `${getCookie(Cookies.ID)}`,
-          orgName: `${getCookie(Cookies.ORGANIZATION_NAME)}`,
-        })
-          .then((response) => {
-            console.log("res", response);
-            setLoading(false);
-            setInvites([...invites, values.email]);
-            form.reset({ email: "" });
-            toast.success("Invite sent successfully");
-          })
-          .catch((err) => {
-            console.log("err", err);
-            setLoading(false);
-          });
-      }
     }
+
+    if(!values.email){
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${getCookie(Cookies.ORGANIZATION_ID)}/invitation`;
+      const invitation = await authorizedApiRequest(HttpMethods.POST, url, {
+        orgId: `${getCookie(Cookies.ORGANIZATION_ID)}`,
+        email: values.email,
+        userId: `${getCookie(Cookies.ID)}`,
+        orgName: `${getCookie(Cookies.ORGANIZATION_NAME)}`,
+      })
+
+      setLoading(false);
+      setInvites([...invites, values.email]);
+      form.reset({ email: "" });
+      toast.success("Invitation sent successfully.");
+
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+
   };
 
   const handleFinish = () => {
