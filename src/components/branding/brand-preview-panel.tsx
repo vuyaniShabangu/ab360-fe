@@ -4,10 +4,11 @@ import useBrandingStore from "@/stores/use-branding-store";
 import { valueOptions, logoOptions } from "@/constants/branding_constants";
 import TypographyPreview from "./typography-preview";
 import ColorPreview from "./color-preview";
-import ImageryPreview from './imagery-preview';
-import BrandVoicePreview from './brand-voice-preview';
-import BrandFeedbackPreview from './brand-feedback-preview';
-
+import ImageryPreview from "./imagery-preview";
+import BrandVoicePreview from "./brand-voice-preview";
+import BrandFeedbackPreview from "./brand-feedback-preview";
+import { Label } from "../ui/label";
+import { Slider } from "../ui/slider";
 
 export default function BrandPreviewPanel() {
   const {
@@ -18,7 +19,7 @@ export default function BrandPreviewPanel() {
     selectedColors,
     selectedImagerySet,
     selectedVoiceSet,
-    brandFeedback
+    brandFeedback,
   } = useBrandingStore();
 
   const handleViewFullPreview = (): void => {
@@ -63,6 +64,15 @@ export default function BrandPreviewPanel() {
                 ) : (
                   <p>25-40 year old professionals</p>
                 )}
+                {brandDiscovery.targetAudience.gender && (
+                  <p>{brandDiscovery.targetAudience.gender}</p>
+                )}
+                {brandDiscovery.targetAudience.education && (
+                  <p>{brandDiscovery.targetAudience.education} Level</p>
+                )}
+                {brandDiscovery.targetAudience.income && (
+                  <p>{brandDiscovery.targetAudience.income} Income level</p>
+                )}
                 <p>
                   {brandDiscovery.targetAudience.location ||
                     "Urban, tech-savvy"}
@@ -104,6 +114,128 @@ export default function BrandPreviewPanel() {
               </div>
             </div>
           )}
+
+          {activeStep >= 0 &&
+            (brandDiscovery.competitors || brandDiscovery.differentiation) && (
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                  Competitors
+                </h4>
+                <div className="bg-gray-100 rounded-md p-3 text-sm text-gray-600">
+                  <p>{brandDiscovery.competitors}</p>
+                  <p className="pt-0.5">{brandDiscovery.differentiation}</p>
+                </div>
+              </div>
+            )}
+
+          {activeStep >= 0 && (
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Brand&apos;s personality
+              </h4>
+              <div className="bg-gray-100 rounded-md p-3 text-sm text-gray-600">
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <Label className="text-sm">Formal</Label>
+                    <Label className="text-sm">Casual</Label>
+                  </div>
+                  <Slider
+                    value={[brandDiscovery.personality.formalCasual]}
+                    max={100}
+                    step={1}
+                    disabled
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <Label className="text-sm">Traditional</Label>
+                    <Label className="text-sm">Modern</Label>
+                  </div>
+                  <Slider
+                    value={[brandDiscovery.personality.traditionalModern]}
+                    max={100}
+                    step={1}
+                    disabled
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <Label className="text-sm">Serious</Label>
+                    <Label className="text-sm">Playful</Label>
+                  </div>
+                  <Slider
+                    value={[brandDiscovery.personality.seriousPlayful]}
+                    max={100}
+                    step={1}
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeStep >= 0 && brandDiscovery.problemsSolved.length > 0 && (
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Problems your solve
+              </h4>
+              <div className="bg-gray-100 rounded-md p-3 text-sm text-gray-600">
+                <div className="flex flex-wrap gap-1">
+                  {brandDiscovery.problemsSolved.map((valueId) => {
+                    return (
+                      <span
+                        key={valueId}
+                        className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs"
+                      >
+                        {valueId}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeStep >= 0 &&
+            (brandDiscovery.longTermGoals || brandDiscovery.shortTermGoals) && (
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                  Business goals
+                </h4>
+                <div className="bg-gray-100 rounded-md p-3 text-sm text-gray-600">
+                  <p>{brandDiscovery.shortTermGoals}</p>
+                  <p className="pt-0.5">{brandDiscovery.longTermGoals}</p>
+                </div>
+              </div>
+            )}
+
+          {activeStep >= 0 &&
+            (brandDiscovery.visualAversions ||
+              brandDiscovery.visualPreferences) && (
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                  Visual elements
+                </h4>
+                <div className="bg-gray-100 rounded-md p-3 text-sm text-gray-600">
+                  {brandDiscovery.visualPreferences && (
+                    <div className="mb-3">
+                      <h5 className="text-sm font-small text-gray-700 mb-0.5 underline">
+                        Elements to include
+                      </h5>
+                      <p>{brandDiscovery.visualPreferences}</p>
+                    </div>
+                  )}
+                  {brandDiscovery.visualAversions && (
+                    <div className="">
+                      <h5 className="text-sm font-small text-gray-700 mb-0.5 underline">
+                        Elements to avoid
+                      </h5>
+                      <p className="pt-0.5">{brandDiscovery.visualAversions}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
           {activeStep >= 1 && (
             <div>
