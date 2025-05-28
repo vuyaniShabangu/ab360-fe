@@ -25,7 +25,7 @@ interface Personality {
   seriousPlayful: number;
 }
 
-interface Brand {
+export interface Brand {
   brandDiscovery?: {
     targetAudience?: TargetAudience;
     industry?: string;
@@ -65,14 +65,20 @@ export default function BrandingModule() {
       const url = `${process.env.NEXT_PUBLIC_API_URL_LOCAL}${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/branding/${id}`;
       const branding = await apiRequest(HttpMethods.GET, url, {});
       setBrand(branding.data);
+      console.log("brand result: ", branding.data)
     } catch (error) {
+      console.log("Oops, no branding!")
       console.log(error);
     }
   };
 
+  const updateBrand = (value: Brand) => {
+    setBrand({...value})
+  }
+
   return (
     <div>
-      {!currentProject.id || brand == null ? (
+      {!currentProject.id && brand == null ? (
         <div className="flex items-center gap-4">
           <ClientProjectSelect />
         </div>
@@ -89,7 +95,7 @@ export default function BrandingModule() {
 
               {/* Navigation Buttons - placed within the content area for proper spacing */}
               <div className="max-w-4xl mx-auto px-6 pb-6">
-                <NavigationButtons />
+                <NavigationButtons brand={brand} updateBrand={updateBrand}/>
               </div>
             </div>
 

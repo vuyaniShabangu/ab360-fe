@@ -129,7 +129,6 @@ const ClientProjectSelect = () => {
       console.log("selected project is null!");
       return;
     }
-    console.log("project", project)
     selectCurrentProject({ id: project.id, name: project.name });
   };
 
