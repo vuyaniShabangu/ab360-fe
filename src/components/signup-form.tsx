@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -12,45 +12,45 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { authClient, signUp } from '@/lib/auth-client';
-import { toast } from 'sonner';
-import Link from 'next/link';
-import { PageRoutes } from '@/constants/page_routes';
-import { setCookie } from 'cookies-next';
-import { Cookies } from '@/constants/cookies';
+} from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUp } from "@/lib/auth-client";
+import { toast } from "sonner";
+import Link from "next/link";
+import { PageRoutes } from "@/constants/page_routes";
+import { setCookie } from "cookies-next";
+import { Cookies } from "@/constants/cookies";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
+    message: "Name must be at least 2 characters.",
   }),
   email: z.string().min(2, {
-    message: 'Email must be at least 2 characters.',
+    message: "Email must be at least 2 characters.",
   }),
   password: z.string().min(8, {
-    message: 'Password must be at least 8 characters.',
+    message: "Password must be at least 8 characters.",
   }),
-  role: z.string().optional()
+  role: z.string().optional(),
 });
 
 export function SignupForm({
   className,
   ...props
-}: React.ComponentProps<'form'>) {
+}: React.ComponentProps<"form">) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const {data, error, isPending} = authClient.useListOrganizations()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      role: '',
+      name: "",
+      email: "",
+      password: "",
+      role: "",
     },
   });
 
@@ -68,45 +68,31 @@ export function SignupForm({
         console.log(response.error);
         return;
       }
-
       if (response.data) {
-        toast.success('Account created successfully', {
-          description: 'Please check your email to verify your account',
+        setCookie(Cookies.ID, response.data.user.id);
+        setCookie(Cookies.NAME, response.data.user.name);
+        toast.success("Account created successfully", {
+          description: "Please check your email to verify your account",
         });
-        console.log(response.data);
-
-        if(!isPending) {
-          if(!error && data){
-            if(data[0] != null) {
-              const organizationId: string|null = data[0].id;
-              const organizationName: string|null = data[0].name;
-              if(organizationId != null && organizationName != null) {
-              setCookie(Cookies.ORGANIZATION_ID, organizationId);
-              setCookie(Cookies.ORGANIZATION_NAME, organizationName);
-              }
-            }
-          }
-        }
-        
         router.push(PageRoutes.COMPANY_SIGNUP);
       }
     } catch (error) {
-      console.log(error)
-      toast.error('An unexpected error occured. Please try again later.');
+      console.log(error);
+      toast.error("An unexpected error occured. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   const signUpWithSocial = async () => {
-    toast.info('Coming soon');
+    toast.info("Coming soon");
   };
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('flex flex-col gap-6', className)}
+        className={cn("flex flex-col gap-6", className)}
         {...props}
       >
         <div className="flex flex-col items-center gap-2 text-center">
@@ -172,9 +158,16 @@ export function SignupForm({
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={loading}>
-            Create account
-          </Button>
+          {loading ? (
+            <Button disabled>
+              <Loader2 className="animate-spin" />
+              Please wait
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full" disabled={loading}>
+              Create account
+            </Button>
+          )}
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
             <span className="bg-background text-muted-foreground relative z-10 px-2">
               Or continue with
@@ -182,14 +175,14 @@ export function SignupForm({
           </div>
           <div
             className={cn(
-              'w-full gap-2 flex items-center',
-              'justify-between flex-col'
+              "w-full gap-2 flex items-center",
+              "justify-between flex-col"
             )}
           >
             <Button
               type="button"
               variant="outline"
-              className={cn('w-full gap-2')}
+              className={cn("w-full gap-2")}
               onClick={signUpWithSocial}
               disabled={loading}
             >
@@ -199,7 +192,7 @@ export function SignupForm({
           </div>
         </div>
         <div className="text-center text-sm">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/sign-in" className="underline underline-offset-4">
             Sign in
           </Link>

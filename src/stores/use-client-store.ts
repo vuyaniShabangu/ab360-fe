@@ -1,12 +1,21 @@
 import { create } from "zustand";
 
+interface project {
+  id: string;
+  name: string;
+}
+
 interface client {
     id: string,
-    name: string
+    name: string,
+    projects: project[]
 }
 
 interface clientState {
     currentSelectedClient: client,
+    clientAdded: boolean,
+
+    clientIsAdded: (value: boolean) => void;
     selectCurrentClient: (client: client) => void
     getCurrentClient: () => client
 }
@@ -14,16 +23,23 @@ interface clientState {
 const useClientStore = create<clientState>((set, get) => ({
     currentSelectedClient: {
         id: "",
-        name: ""
+        name: "",
+        projects: []
     },
-    selectCurrentClient: ({ id, name }) => set((state) => ({
+    clientAdded: true,
+    selectCurrentClient: ({ id, name, projects }) => set((state) => ({
         ...state,
         currentSelectedClient: {
             id: id,
-            name: name
+            name: name,
+            projects: projects
         }
     })),
-    getCurrentClient: () => get().currentSelectedClient
+    getCurrentClient: () => get().currentSelectedClient,
+    clientIsAdded: (value: boolean) => set((state) => ({
+        ...state,
+        clientAdded: value
+    }))
 }))
 
 // const useClientStore = create<clientState>()(

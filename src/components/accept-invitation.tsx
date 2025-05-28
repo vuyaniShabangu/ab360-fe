@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,132 +16,94 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { signIn } from "@/lib/auth-client";
+import Link from "next/link";
 import { PageRoutes } from "@/constants/page_routes";
 import { setCookie } from "cookies-next";
 import { Cookies } from "@/constants/cookies";
+import { Loader2 } from "lucide-react";
+import { APIRoutes } from "@/constants/api_routes";
 import { authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
-import { APIRoutes } from "@/constants/api_routes";
-import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
   email: z.string().min(2, {
     message: "Email must be at least 2 characters.",
   }),
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
+  role: z.string().optional(),
 });
 
-export function SigninForm({
+export function AcceptInvitationForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  const id = props.id;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      role: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setLoading(true);
-    const response = await signIn.email({
-      email: values.email,
-      password: values.password,
-    });
-
-    if (response.error) {
-      toast.error(response.error.message, {
-        description: response.error.message,
+    try {
+      setLoading(true);
+      const response = await signUp.email({
+        name: values.name,
+        email: values.email,
+        password: values.password,
       });
-      console.log(response.error);
-      setLoading(false);
-      return;
-    } else if (response.data) {
-      setCookie(Cookies.ID, response.data.user.id);
-      setCookie(Cookies.NAME, response.data.user.name);
-      authorizedApiRequest(
-        HttpMethods.GET,
-        `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${response.data.user.id}`,
-        {}
-      )
-        .then((data) => {
-          if (data.data[0]) {
-            setCookie(Cookies.ORGANIZATION_ID, data.data[0].id);
-            setCookie(Cookies.ORGANIZATION_NAME, data.data[0].name);
 
-            toast.success("Logged in successfully");
-            setLoading(false);
-            router.push(PageRoutes.DASHBOARD);
-            return;
-          }
-          toast.error("Login unsuccessful");
-          setLoading(false);
-          return;
+      if (response.error) {
+        toast.error(response.error.message);
+        console.log(response.error);
+        return;
+      }
+      if (response.data) {
+        setCookie(Cookies.ID, response.data.user.id);
+        setCookie(Cookies.NAME, response.data.user.name);
+
+        let url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${id}/accept`;
+        const invitation = await authorizedApiRequest(HttpMethods.PUT, url, {})
+
+        url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${invitation.data.organizationId}/organization`
+        const organization = await authorizedApiRequest(HttpMethods.GET, url, {})
+        setCookie(Cookies.ORGANIZATION_ID, organization.data.id);
+        setCookie(Cookies.ORGANIZATION_NAME, organization.data.name);
+
+        url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/member`;
+        await authorizedApiRequest(HttpMethods.POST, url, {
+          organizationId: organization.data.id,
+          userId: response.data.user.id,
         })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        });
-    }
+
+        setLoading(false);
+        toast.success("Account created successfully");
+        router.push(PageRoutes.DASHBOARD);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An unexpected error occured. Please try again later.");
+      setLoading(false)
+    } 
   };
 
-  const signInWithSocial = async () => {
-    // toast.info('Coming soon');
-    // return;
-
-    signIn.social(
-      {
-        provider: "google",
-        callbackURL: "/auth/callback",
-      },
-      {
-        onRequest: () => {
-          setLoading(true);
-        },
-        onResponse: async (ctx) => {
-          setLoading(false);
-          console.log({ ctx });
-
-          const { response } = ctx;
-
-          if (!response.body) {
-            toast.error(
-              "ReadableStream not supported or response has no body."
-            );
-            throw new Error(
-              "ReadableStream not supported or response has no body."
-            );
-          }
-
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          let result = "";
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            result += decoder.decode(value, { stream: true });
-          }
-
-          // Final chunk
-          // result += decoder.decode();
-
-          const parsedResult: { data: { url: string; redirect: boolean } } =
-            JSON.parse(result);
-
-          // router.push(parsedResult.data.url);
-          window.open(parsedResult.data.url, "_blank");
-        },
-      }
-    );
+  const signUpWithSocial = async () => {
+    toast.info("Coming soon");
   };
 
   return (
@@ -154,12 +114,25 @@ export function SigninForm({
         {...props}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
+          <h1 className="text-2xl font-bold">Accept Invitation</h1>
           <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
+            Enter your details below to create your account.
           </p>
         </div>
         <div className="grid gap-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="grid gap-3">
+                <FormLabel>Full name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your name here" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"
@@ -167,7 +140,7 @@ export function SigninForm({
               <FormItem className="grid gap-3">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="email@domain.com" {...field} />
+                  <Input placeholder="Enter your email here" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -180,16 +153,25 @@ export function SigninForm({
               <FormItem className="grid gap-3">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Enter your password here"
+                    {...field}
+                  />
                 </FormControl>
-                <FormDescription>
-                  <a
-                    href="#"
-                    className="text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem className="grid gap-3">
+                <FormLabel>Job title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your job title here" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -200,8 +182,8 @@ export function SigninForm({
               Please wait
             </Button>
           ) : (
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button type="submit" className="w-full" disabled={loading}>
+              Create account
             </Button>
           )}
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -219,18 +201,18 @@ export function SigninForm({
               type="button"
               variant="outline"
               className={cn("w-full gap-2")}
+              onClick={signUpWithSocial}
               disabled={loading}
-              onClick={signInWithSocial}
             >
               <img src="/google.svg" alt="signin with google" />
-              Sign in with Google
+              Sign up with your Google account
             </Button>
           </div>
         </div>
         <div className="text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link href="/sign-up" className="underline underline-offset-4">
-            Sign up
+          Already have an account?{" "}
+          <Link href="/sign-in" className="underline underline-offset-4">
+            Sign in
           </Link>
         </div>
       </form>
