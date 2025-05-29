@@ -10,6 +10,7 @@ import { APIRoutes } from "@/constants/api_routes";
 import { apiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import ClientProjectSelect from "../client-project-select";
+import useBrandingStore from "@/stores/use-branding-store";
 
 interface TargetAudience {
   ageRange: number[];
@@ -50,11 +51,15 @@ export interface Brand {
 
 export default function BrandingModule() {
   const [brand, setBrand] = useState<Brand | null>(null);
+  const [hasBrand, setHasBrand] = useState<boolean>(false);
+  const { updateValues,updateBrandDiscovery, updateProblems} = useBrandingStore();
+
   const currentProject = useProjectStore(
     (state) => state.currentSelectedProject
   );
 
   useEffect(() => {
+    console.log("use effect branding")
     if (currentProject.id) {
       getBranding(currentProject.id);
     }
@@ -64,8 +69,79 @@ export default function BrandingModule() {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL_LOCAL}${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/branding/${id}`;
       const branding = await apiRequest(HttpMethods.GET, url, {});
-      setBrand(branding.data);
-      console.log("brand result: ", branding.data)
+      // setBrand(branding.data);
+      setHasBrand(true);
+      if(branding.data){
+        const brandingData: Brand = branding.data.metadata;
+        // updating target audience age range
+        if(brandingData.brandDiscovery?.targetAudience?.ageRange && brandingData.brandDiscovery.targetAudience.ageRange.length > 0 ){
+          updateBrandDiscovery('targetAudience.ageRange', brandingData.brandDiscovery.targetAudience.ageRange)
+        }
+        // updating target audience gender
+        if(brandingData.brandDiscovery?.targetAudience?.gender  ){
+          updateBrandDiscovery('targetAudience.gender', brandingData.brandDiscovery.targetAudience.gender)
+        }
+        // updating target audience target income
+        if(brandingData.brandDiscovery?.targetAudience?.income  ){
+          updateBrandDiscovery('targetAudience.income', brandingData.brandDiscovery.targetAudience.income)
+        }
+        // updating target audience target education level
+        if(brandingData.brandDiscovery?.targetAudience?.education  ){
+          updateBrandDiscovery('targetAudience.education', brandingData.brandDiscovery.targetAudience.education)
+        }
+        // updating target audience location
+        if(brandingData.brandDiscovery?.targetAudience?.location  ){
+          updateBrandDiscovery('targetAudience.location', brandingData.brandDiscovery.targetAudience.location)
+        }
+        // udpdating industry
+        if(brandingData.brandDiscovery?.industry  ){
+          updateBrandDiscovery('industry', brandingData.brandDiscovery.industry)
+        }
+        // updating values
+        if(brandingData.brandDiscovery?.values && brandingData.brandDiscovery?.values?.length > 0){
+          updateValues(brandingData.brandDiscovery.values)
+        }
+        // updating competitors
+        if(brandingData.brandDiscovery?.competitors ){
+          updateBrandDiscovery('competitors', brandingData.brandDiscovery.competitors)
+        }
+        // updating Differentiation
+        if(brandingData.brandDiscovery?.differentiation ){
+          updateBrandDiscovery('differentiation', brandingData.brandDiscovery.differentiation)
+        }
+        // updating personality formal casual
+        if(brandingData.brandDiscovery?.personality?.formalCasual ){
+          updateBrandDiscovery('personality.formalCasual', brandingData.brandDiscovery.personality.formalCasual)
+        }
+        // updating personality traditional modern
+        if(brandingData.brandDiscovery?.personality?.traditionalModern ){
+          updateBrandDiscovery('personality.traditionalModern', brandingData.brandDiscovery.personality.traditionalModern)
+        }
+        // updating personality traditional
+        if(brandingData.brandDiscovery?.personality?.seriousPlayful ){
+          updateBrandDiscovery('personality.seriousPlayful', brandingData.brandDiscovery.personality.seriousPlayful)
+        }
+        // updating problems solved
+        if(brandingData.brandDiscovery?.problemsSolved && brandingData.brandDiscovery?.problemsSolved?.length > 0){
+          updateProblems(brandingData.brandDiscovery.problemsSolved)
+        }
+        // updating short term goals
+        if(brandingData.brandDiscovery?.shortTermGoals ){
+          updateBrandDiscovery('shortTermGoals', brandingData.brandDiscovery.shortTermGoals)
+        }
+        // updating long term goals
+        if(brandingData.brandDiscovery?.longTermGoals ){
+          updateBrandDiscovery('longTermGoals', brandingData.brandDiscovery.longTermGoals)
+        }
+        // updating visual preferences
+        if(brandingData.brandDiscovery?.visualPreferences ){
+          updateBrandDiscovery('visualPreferences', brandingData.brandDiscovery.visualPreferences)
+        }
+        // updating visual preferences
+        if(brandingData.brandDiscovery?.visualAversions ){
+          updateBrandDiscovery('visualAversions', brandingData.brandDiscovery.visualAversions)
+        }
+      }
     } catch (error) {
       console.log("Oops, no branding!")
       console.log(error);
@@ -95,7 +171,7 @@ export default function BrandingModule() {
 
               {/* Navigation Buttons - placed within the content area for proper spacing */}
               <div className="max-w-4xl mx-auto px-6 pb-6">
-                <NavigationButtons brand={brand} updateBrand={updateBrand}/>
+                <NavigationButtons hasBrand={hasBrand} />
               </div>
             </div>
 

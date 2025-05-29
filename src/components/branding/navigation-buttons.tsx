@@ -1,7 +1,6 @@
 "use client";
 
 import useBrandingStore from "@/stores/use-branding-store";
-import { Brand } from "./branding-module";
 import useProjectStore from "@/stores/use-project-store";
 import { APIRoutes } from "@/constants/api_routes";
 import { apiRequest } from "@/api";
@@ -11,11 +10,10 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 
 interface Props {
-  brand: Brand | null;
-  updateBrand: (value: Brand) => void;
+  hasBrand: boolean
 }
 
-export default function NavigationButtons({ brand, updateBrand }: Props) {
+export default function NavigationButtons({ hasBrand }: Props) {
   const [loading, setloading] = useState<boolean>(false);
   const { activeStep, goToNextStep, goToPreviousStep } = useBrandingStore();
   const {
@@ -37,7 +35,7 @@ export default function NavigationButtons({ brand, updateBrand }: Props) {
     setloading(true);
     const url = `${process.env.NEXT_PUBLIC_API_URL_LOCAL}${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/branding`;
     try {
-      if (brand == null) {
+      if (!hasBrand) {
         const branding = await apiRequest(HttpMethods.POST, url, {
           projectId: currentProject.id,
           metadata: {
@@ -54,7 +52,6 @@ export default function NavigationButtons({ brand, updateBrand }: Props) {
           },
         });
         console.log(branding.data);
-        updateBrand(branding.data);
         setloading(false);
       } else {
         const branding = await apiRequest(HttpMethods.PUT, url, {
@@ -73,7 +70,6 @@ export default function NavigationButtons({ brand, updateBrand }: Props) {
           },
         });
         console.log(branding.data);
-        updateBrand(branding.data);
         setloading(false);
       }
     } catch (error) {
@@ -93,9 +89,9 @@ export default function NavigationButtons({ brand, updateBrand }: Props) {
       </button>
       <div>
         {loading ? (
-          <Button disabled>
+          <Button disabled className="mr-4 py-5">
             <Loader2 className="animate-spin" />
-            Please wait, Saving
+             Wait, Saving
           </Button>
         ) : (
           <button

@@ -54,6 +54,8 @@ export interface BrandingState {
   setSelectedImagerySet: (setId: string) => void;
   setSelectedVoiceSet: (setId: string) => void;
   setBrandFeedback: (feedback: string) => void;
+  updateValues: (values: string[]) => void;
+  updateProblems: (values: string[]) => void;
 }
 
 const useBrandingStore = create<BrandingState>((set) => ({
@@ -136,6 +138,19 @@ const useBrandingStore = create<BrandingState>((set) => ({
       }
     };
   }),
+
+  updateValues: (values: string[]) => set((state) => ({
+    brandDiscovery: {
+      ...state.brandDiscovery,
+      values: [...values]
+    }
+  })),
+    updateProblems: (values: string[]) => set((state) => ({
+    brandDiscovery: {
+      ...state.brandDiscovery,
+      problemsSolved: [...values]
+    }
+  })),
 
   toggleProblem: (problemId: string) => set((state) => {
     const problems = [...state.brandDiscovery.problemsSolved];
