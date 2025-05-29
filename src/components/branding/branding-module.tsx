@@ -7,7 +7,7 @@ import BrandPreviewPanel from "./brand-preview-panel";
 import useProjectStore from "@/stores/use-project-store";
 import { useEffect, useState } from "react";
 import { APIRoutes } from "@/constants/api_routes";
-import { apiRequest } from "@/api";
+import { apiRequest, authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import ClientProjectSelect from "../client-project-select";
 import useBrandingStore from "@/stores/use-branding-store";
@@ -65,8 +65,8 @@ export default function BrandingModule() {
 
   const getBranding = async (id: string) => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL_LOCAL}${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/branding/${id}`;
-      const branding = await apiRequest(HttpMethods.GET, url, {});
+      const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/branding/${id}`;
+      const branding = await authorizedApiRequest(HttpMethods.GET, url, {});
       setHasBrand(true);
       if(branding.data){
         const brandingData: Brand = branding.data.metadata;
