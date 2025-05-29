@@ -157,6 +157,7 @@ export default function BrandingModule() {
         // update voice set
         if(brandingData.selectedVoiceSet){
           updateVoiceSet(brandingData.selectedVoiceSet)
+          
         }
       }
     } catch (error) {

@@ -89,10 +89,19 @@ export default function NavigationButtons({ hasBrand }: Props) {
       </button>
       <div>
         {loading ? (
-          <Button disabled className="mr-4 py-5">
-            <Loader2 className="animate-spin" />
-             Wait, Saving
-          </Button>
+          <>
+            {hasBrand ? (
+              <Button disabled className="mr-4 py-5">
+                <Loader2 className="animate-spin" />
+                Wait, Updating
+              </Button>
+            ) : (
+              <Button disabled className="mr-4 py-5">
+                <Loader2 className="animate-spin" />
+                Wait, Saving
+              </Button>
+            )}
+          </>
         ) : (
           <button
             className="mr-3 px-4 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50"
