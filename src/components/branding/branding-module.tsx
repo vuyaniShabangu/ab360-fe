@@ -50,16 +50,14 @@ export interface Brand {
 }
 
 export default function BrandingModule() {
-  const [brand, setBrand] = useState<Brand | null>(null);
   const [hasBrand, setHasBrand] = useState<boolean>(false);
-  const { updateValues,updateBrandDiscovery, updateProblems} = useBrandingStore();
+  const { updateValues,updateBrandDiscovery, updateProblems, updateSelectedImages, setSelectedColors, setSelectedFont, updateImagerySet, updateVoiceSet} = useBrandingStore();
 
   const currentProject = useProjectStore(
     (state) => state.currentSelectedProject
   );
 
   useEffect(() => {
-    console.log("use effect branding")
     if (currentProject.id) {
       getBranding(currentProject.id);
     }
@@ -69,7 +67,6 @@ export default function BrandingModule() {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL_LOCAL}${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/branding/${id}`;
       const branding = await apiRequest(HttpMethods.GET, url, {});
-      // setBrand(branding.data);
       setHasBrand(true);
       if(branding.data){
         const brandingData: Brand = branding.data.metadata;
@@ -141,6 +138,26 @@ export default function BrandingModule() {
         if(brandingData.brandDiscovery?.visualAversions ){
           updateBrandDiscovery('visualAversions', brandingData.brandDiscovery.visualAversions)
         }
+        // updating selected images
+        if(brandingData.selectedImages && brandingData.selectedImages.length > 0){
+          updateSelectedImages(brandingData.selectedImages)
+        }
+        // updating selected colors
+        if(brandingData.selectedColors && brandingData.selectedColors.length > 0){
+          setSelectedColors(brandingData.selectedColors)
+        }
+        // updating selected font
+        if(brandingData.selectedFont){
+          setSelectedFont(brandingData.selectedFont)
+        }
+        // update selected imagery set
+        if(brandingData.selectedImagerySet){
+          updateImagerySet(brandingData.selectedImagerySet)
+        }
+        // update voice set
+        if(brandingData.selectedVoiceSet){
+          updateVoiceSet(brandingData.selectedVoiceSet)
+        }
       }
     } catch (error) {
       console.log("Oops, no branding!")
@@ -148,13 +165,9 @@ export default function BrandingModule() {
     }
   };
 
-  const updateBrand = (value: Brand) => {
-    setBrand({...value})
-  }
-
   return (
     <div>
-      {!currentProject.id && brand == null ? (
+      {!currentProject.id && !hasBrand ? (
         <div className="flex items-center gap-4">
           <ClientProjectSelect />
         </div>

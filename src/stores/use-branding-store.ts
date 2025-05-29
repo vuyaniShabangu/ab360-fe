@@ -39,7 +39,7 @@ export interface BrandingState {
   selectedImagerySet: string | null;
   selectedVoiceSet: string | null;
   brandFeedback: string;
-  
+
   // Actions
   setActiveStep: (step: number) => void;
   goToNextStep: () => void;
@@ -56,6 +56,10 @@ export interface BrandingState {
   setBrandFeedback: (feedback: string) => void;
   updateValues: (values: string[]) => void;
   updateProblems: (values: string[]) => void;
+  updateSelectedImages: (values: number[]) => void;
+  updateSelectedLogo: (value: number) => void;
+  updateImagerySet: (value: string) => void;
+  updateVoiceSet: (value: string) => void;
 }
 
 const useBrandingStore = create<BrandingState>((set) => ({
@@ -74,7 +78,7 @@ const useBrandingStore = create<BrandingState>((set) => ({
     differentiation: "",
     personality: {
       formalCasual: 50,
-      traditionalModern: 50, 
+      traditionalModern: 50,
       seriousPlayful: 50
     },
     problemsSolved: [],
@@ -94,17 +98,37 @@ const useBrandingStore = create<BrandingState>((set) => ({
 
   // Actions
   setActiveStep: (step: number) => set({ activeStep: step }),
-  goToNextStep: () => set((state) => ({ 
-    activeStep: Math.min(7, state.activeStep + 1) 
+  goToNextStep: () => set((state) => ({
+    activeStep: Math.min(7, state.activeStep + 1)
   })),
-  goToPreviousStep: () => set((state) => ({ 
-    activeStep: Math.max(0, state.activeStep - 1) 
+  goToPreviousStep: () => set((state) => ({
+    activeStep: Math.max(0, state.activeStep - 1)
   })),
-  
+
+  updateSelectedImages: (values: number[]) => set((state) => ({
+    ...state,
+    selectedImages: [...values]
+  })),
+
+  updateSelectedLogo: (value: number) => set((state) => ({
+    ...state,
+    selectedLogo: value
+  })),
+
+  updateImagerySet: (value:string) => set((state) => ({
+    ...state,
+    selectedImagerySet: value
+  })),
+
+  updateVoiceSet: (value: string) => set((state) => ({
+    ...state,
+    selectedVoiceSet: value
+  })),
+
   updateBrandDiscovery: (field: string, value: any) => set((state) => {
     const newState = { ...state };
     const newBrandDiscovery = { ...newState.brandDiscovery };
-    
+
     // Handle nested objects
     if (field.includes('.')) {
       const [parent, child] = field.split('.');
@@ -117,20 +141,20 @@ const useBrandingStore = create<BrandingState>((set) => ({
       // Use type assertion for setting properties dynamically
       (newBrandDiscovery as any)[field] = value;
     }
-    
+
     return { brandDiscovery: newBrandDiscovery };
   }),
-  
+
   toggleValue: (valueId: string) => set((state) => {
     const values = [...state.brandDiscovery.values];
     const index = values.indexOf(valueId);
-    
+
     if (index !== -1) {
       values.splice(index, 1);
     } else {
       values.push(valueId);
     }
-    
+
     return {
       brandDiscovery: {
         ...state.brandDiscovery,
@@ -145,7 +169,8 @@ const useBrandingStore = create<BrandingState>((set) => ({
       values: [...values]
     }
   })),
-    updateProblems: (values: string[]) => set((state) => ({
+
+  updateProblems: (values: string[]) => set((state) => ({
     brandDiscovery: {
       ...state.brandDiscovery,
       problemsSolved: [...values]
@@ -155,13 +180,13 @@ const useBrandingStore = create<BrandingState>((set) => ({
   toggleProblem: (problemId: string) => set((state) => {
     const problems = [...state.brandDiscovery.problemsSolved];
     const index = problems.indexOf(problemId);
-    
+
     if (index !== -1) {
       problems.splice(index, 1);
     } else {
       problems.push(problemId);
     }
-    
+
     return {
       brandDiscovery: {
         ...state.brandDiscovery,
@@ -173,18 +198,18 @@ const useBrandingStore = create<BrandingState>((set) => ({
   toggleImageSelection: (index: number) => set((state) => {
     const selectedImages = [...state.selectedImages];
     const imageIndex = selectedImages.indexOf(index);
-    
+
     if (imageIndex !== -1) {
       selectedImages.splice(imageIndex, 1);
     } else if (selectedImages.length < 5) {
       selectedImages.push(index);
     }
-    
+
     return { selectedImages };
   }),
 
   setSelectedLogo: (index: number) => set({ selectedLogo: index }),
-  
+
   setSelectedColors: (colors: string[]) => set({ selectedColors: colors }),
   setSelectedFont: (font: string) => set({ selectedFont: font }),
   setSelectedImagerySet: (setId: string) => set({ selectedImagerySet: setId }),
