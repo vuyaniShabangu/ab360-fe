@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
 import { getCookie } from "cookies-next";
 import { Cookies } from "@/constants/cookies";
-import { apiRequest, authorizedApiRequest } from "@/api";
+import { authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import { APIRoutes } from "@/constants/api_routes";
 
@@ -59,7 +59,7 @@ export function CompanyInviteForm({
     try {
       setLoading(true);
       const url = `${APIRoutes.ORGANIZATIONS.GET_ORGANIZATION}/${getCookie(Cookies.ORGANIZATION_ID)}/invitation`;
-      const invitation = await authorizedApiRequest(HttpMethods.POST, url, {
+      await authorizedApiRequest(HttpMethods.POST, url, {
         orgId: `${getCookie(Cookies.ORGANIZATION_ID)}`,
         email: values.email,
         userId: `${getCookie(Cookies.ID)}`,
