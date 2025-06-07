@@ -7,7 +7,7 @@ import BrandPreviewPanel from "./brand-preview-panel";
 import useProjectStore from "@/stores/use-project-store";
 import { useEffect, useState } from "react";
 import { APIRoutes } from "@/constants/api_routes";
-import { apiRequest, authorizedApiRequest } from "@/api";
+import { authorizedApiRequest } from "@/api";
 import { HttpMethods } from "@/constants/api_methods";
 import ClientProjectSelect from "../client-project-select";
 import useBrandingStore from "@/stores/use-branding-store";
@@ -42,7 +42,7 @@ export interface Brand {
   };
   selectedImages?: number[];
   selectedLogo?: null;
-  selectedColors?: any[];
+  selectedColors?: string[];
   selectedFont?: string;
   selectedImagerySet?: null;
   selectedVoiceSet?: null;
